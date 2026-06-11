@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Biliteracy Bridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: #0d1b2e !important;
+    background-color: #0d1b2e !important;
+    color: #ffffff !important;
+    font-family: 'Cormorant Garamond', serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  /* Force dark everywhere */
+  * { color: inherit; }
+  body { background: #0d1b2e !important; }
+
+  /* ── NAV ── */
+  nav {
+    background: #0d1b2e !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #c9a84c;
+    text-decoration: none;
+  }
+  .lang-wrap { display: flex; gap: 8px; }
+  .lang-btn {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    padding: 6px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .lang-btn.on  { background: #c9a84c; color: #0d1b2e; border-color: #c9a84c; }
+  .lang-btn.off { background: transparent; color: #fff; border-color: rgba(255,255,255,0.3); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 64px 28px 48px;
+    text-align: center;
+  }
+  .eyebrow {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c9a84c;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: #ffffff;
+    margin-bottom: 24px;
+  }
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.75);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .hero-sub em {
+    font-style: italic;
+    color: #5bbfb5;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.18);
+    border-radius: 12px;
+    margin: 0 20px 28px;
+    padding: 32px 28px;
+  }
+  .card-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #c9a84c;
+    margin-bottom: 14px;
+  }
+  .card p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.8);
+  }
+  .card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 14px;
+  }
+
+  /* ── VALUES ── */
+  .values-section {
+    padding: 0 20px 40px;
+  }
+  .values-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .values-section .section-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: #5bbfb5;
+    margin-bottom: 24px;
+  }
+  .value-item {
+    border-left: 2px solid rgba(201,168,76,0.35);
+    padding: 16px 0 16px 20px;
+    margin-bottom: 20px;
+  }
+  .value-title {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #c9a84c;
+    margin-bottom: 8px;
+  }
+  .value-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.75);
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 48px;
+    height: 1px;
+    background: rgba(201,168,76,0.4);
+    margin: 32px auto;
+  }
+
+
+  /* ── MEET MELANIE CTA ── */
+  .meet-cta {
+    margin: 0 20px 40px;
+    padding: 32px 24px;
+    background: rgba(201,168,76,0.07);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 12px;
+    text-align: center;
+  }
+  .meet-cta p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 20px;
+  }
+  .meet-btn {
+    display: inline-block;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #0d1b2e;
+    background: #c9a84c;
+    padding: 14px 32px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .meet-btn:hover { background: #e8c96a; }
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(201,168,76,0.15);
+    padding: 28px 24px;
+    text-align: center;
+  }
+  footer p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: rgba(255,255,255,0.4);
+  }
+</style>
+</head>
+<body bgcolor="#0d1b2e" style="background:#0d1b2e !important; background-color:#0d1b2e !important;">
+
+<nav>
+  <a class="nav-logo" href="index.html">Biliteracy Bridge</a>
+  <div class="lang-wrap">
+    <a class="lang-btn on" href="#">EN</a>
+    <a class="lang-btn off" href="#">ES</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <p class="eyebrow">Our Story</p>
+  <h1>About Biliteracy<br>Bridge</h1>
+  <p class="hero-sub">Built by a parent passionate about biliteracy — <em>because every child deserves this gift.</em></p>
+</section>
+
+<div class="card">
+  <p class="card-label">Who We Are</p>
+  <p>We believe every bilingual child deserves resources that honor both of their languages. Biliteracy Bridge was founded on the belief that raising a bilingual child is one of the most powerful gifts a family can give — and that every parent deserves the tools to make it happen.</p>
+</div>
+
+<div class="card">
+  <p class="card-label">What We Do</p>
+  <p>We create premium workbooks, free resources, and expert guidance for bilingual families navigating English and Spanish literacy together — made by a parent, policy advisor, and former kindergarten teacher who has lived this journey.</p>
+</div>
+
+<div class="divider"></div>
+
+<section class="values-section">
+  <h2>What We Believe</h2>
+  <p class="section-sub">Our guiding principles</p>
+
+  <div class="value-item">
+    <p class="value-title">Biliteracy is a gift</p>
+    <p class="value-text">Every child who grows up reading and writing in two languages carries a lifelong advantage — cognitively, culturally, and professionally.</p>
+  </div>
+
+  <div class="value-item">
+    <p class="value-title">Parents are the bridge</p>
+    <p class="value-text">Families are the most powerful force in a child's language journey. We build tools that make that journey joyful and achievable.</p>
+  </div>
+
+  <div class="value-item">
+    <p class="value-title">Both languages matter equally</p>
+    <p class="value-text">We never treat Spanish as secondary. Our resources celebrate and strengthen both languages with equal care and intention.</p>
+  </div>
+</section>
+
+
+<div class="meet-cta">
+  <p>Biliteracy Bridge was built by a parent who lived this journey — and wanted to make it easier for every family that comes after.</p>
+  <a class="meet-btn" href="founder.html">Meet Melanie →</a>
+</div>
+
+<footer>
+  <p>Criando Niños Bilingües, Juntos.</p>
+</footer>
+
+</body>
+</html>
