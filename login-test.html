@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Login Test</title>
+</head>
+<body>
+<input type="password" id="pw" placeholder="password">
+<button onclick="check()">Login</button>
+<div id="msg"></div>
+<script>
+function check() {
+  var pw = document.getElementById("pw").value;
+  if (pw === "bbadmin-2026") {
+    document.getElementById("msg").innerHTML = "SUCCESS - logged in!";
+  } else {
+    document.getElementById("msg").innerHTML = "Wrong: got [" + pw + "]";
+  }
+}
+</script>
+</body>
+</html>
