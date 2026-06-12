@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Early Ladder — Biliteracy Bridge</title>
+<meta name="description" content="The Biliteracy Ladder: a six-step book series guiding children from first bilingual words to full Spanish-English biliteracy.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:wght@300;400;600&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0d1b2e;--navy2:#162640;--navy3:#1e3356;--gold:#c9a84c;--gold2:#e8c96a;--teal:#5bbfb5;--cream:#f5f0e8;--muted:rgba(255,255,255,0.5)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--navy);color:#fff;font-family:'Cormorant Garamond',serif;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;border-bottom:1px solid rgba(201,168,76,0.2);position:sticky;top:0;z-index:100;background:var(--navy)}
+.nav-brand{font-family:'Playfair Display',serif;font-size:17px;color:var(--gold);text-decoration:none}
+.nav-links{display:flex;gap:28px}
+.nav-links a{color:rgba(255,255,255,0.7);text-decoration:none;font-family:'Josefin Sans',sans-serif;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+
+/* HERO */
+.hero{text-align:center;padding:72px 24px 48px;max-width:700px;margin:0 auto}
+.hero-eyebrow{font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:16px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,52px);font-weight:700;line-height:1.15;color:#fff;margin-bottom:20px}
+.hero h1 span{color:var(--gold)}
+.hero p{font-size:18px;color:var(--muted);line-height:1.7;font-weight:300}
+
+/* LADDER */
+.ladder{max-width:920px;margin:0 auto;padding:0 16px 80px;position:relative}
+.ladder-line{position:absolute;left:50px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,rgba(201,168,76,0.4),rgba(201,168,76,0.1));pointer-events:none}
+
+/* STEP */
+.step{margin-bottom:32px;position:relative;animation:fadeUp 0.5s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.step-dot{position:absolute;left:42px;top:28px;width:18px;height:18px;border-radius:50%;background:var(--gold);border:3px solid var(--navy);z-index:2;transition:transform 0.2s}
+.step.coming .step-dot{background:var(--navy2);border-color:rgba(255,255,255,0.2)}
+.step-card{margin-left:80px;margin-right:4px;background:var(--navy2);border:1px solid rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;transition:border-color 0.2s}
+.step-card:hover{border-color:rgba(201,168,76,0.3)}
+.step-header{display:flex;align-items:center;justify-content:space-between;padding:24px 28px;cursor:pointer;user-select:none}
+.step-header-left{display:flex;align-items:center;gap:16px}
+.step-badge{background:var(--gold);color:var(--navy);font-family:'Josefin Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.step.coming .step-badge{background:rgba(255,255,255,0.1);color:var(--muted)}
+.step-meta h3{font-family:'Playfair Display',serif;font-size:20px;color:#fff}
+.step-meta .age{color:var(--muted);margin-top:2px;font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:0.05em}
+.step-toggle{color:var(--gold);font-size:18px;transition:transform 0.3s}
+.step-card.open .step-toggle{transform:rotate(180deg)}
+.step-body{display:none;padding:0 28px 28px}
+.step-card.open .step-body{display:block}
+.goal-box{background:rgba(0,0,0,0.2);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:16px 20px;margin-bottom:24px}
+.goal-label{font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+.goal-box p{font-size:15px;line-height:1.7;color:rgba(255,255,255,0.8)}
+.books-label{font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.books-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+
+/* ── BOOK CARD : cover-first ─────────────────────────────── */
+.book-card{background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:18px 18px 20px;cursor:pointer;transition:transform 0.25s ease,border-color 0.25s ease,background 0.25s ease;text-decoration:none;display:block;position:relative}
+.book-card:hover,.book-card:focus-visible{border-color:rgba(201,168,76,0.55);background:rgba(201,168,76,0.05);transform:translateY(-4px)}
+.book-card:focus-visible{outline:2px solid var(--gold2);outline-offset:3px}
+
+/* the cover shelf */
+.book-cover{position:relative;aspect-ratio:3/4;max-width:280px;margin:0 auto;border-radius:10px;overflow:hidden;background:linear-gradient(160deg,var(--navy3) 0%,#152138 100%);box-shadow:0 14px 30px rgba(0,0,0,0.45),0 2px 6px rgba(0,0,0,0.3);transition:transform 0.35s ease,box-shadow 0.35s ease}
+.book-card:hover .book-cover{transform:scale(1.025);box-shadow:0 20px 40px rgba(0,0,0,0.55),0 3px 8px rgba(0,0,0,0.35)}
+.book-cover img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* elegant placeholder when no cover image yet */
+.cover-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center}
+.cover-placeholder::before{content:"";position:absolute;inset:10px;border:1px solid rgba(201,168,76,0.4);border-radius:6px}
+.cover-placeholder .ph-icon{font-size:40px;line-height:1}
+.cover-placeholder .ph-title{font-family:'Playfair Display',serif;font-size:14px;line-height:1.4;color:var(--gold2);position:relative;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.cover-placeholder .ph-rule{width:36px;height:1px;background:rgba(201,168,76,0.5)}
+
+/* hover / tap overlay with step context */
+.cover-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:18px;background:linear-gradient(to top,rgba(13,27,46,0.96) 0%,rgba(13,27,46,0.82) 55%,rgba(13,27,46,0.25) 100%);opacity:0;transform:translateY(12px);transition:opacity 0.3s ease,transform 0.3s ease;pointer-events:none}
+.book-card:hover .cover-overlay,
+.book-card.revealed .cover-overlay,
+.book-card:focus-visible .cover-overlay{opacity:1;transform:translateY(0)}
+.overlay-step{display:inline-flex;align-self:flex-start;align-items:center;gap:8px;background:rgba(201,168,76,0.16);border:1px solid rgba(201,168,76,0.45);color:var(--gold2);font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;padding:5px 11px;border-radius:20px;margin-bottom:10px}
+.overlay-goal{font-size:14px;line-height:1.55;color:rgba(255,255,255,0.88);display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:12px}
+.overlay-cta{font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:0.08em;color:var(--gold2)}
+.overlay-cta .tap-hint{display:none}
+@media(hover:none){.overlay-cta .hover-hint{display:none}.overlay-cta .tap-hint{display:inline}}
+
+/* info under the cover */
+.book-info{padding-top:16px;text-align:center}
+.book-title{font-family:'Playfair Display',serif;font-size:16px;color:var(--gold);line-height:1.35;margin-bottom:6px}
+.book-age{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
+.book-price{margin-top:8px;font-family:'Josefin Sans',sans-serif;font-size:12px;color:var(--teal);letter-spacing:0.05em}
+.book-cta{margin-top:10px;font-family:'Josefin Sans',sans-serif;font-size:11px;color:var(--gold);letter-spacing:0.05em}
+
+/* coming soon */
+.book-card.soon .book-cover img,.book-card.soon .cover-placeholder{filter:grayscale(0.4) brightness(0.75)}
+.coming-badge{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:rgba(13,27,46,0.85);border:1px solid rgba(201,168,76,0.45);color:var(--gold);font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;padding:6px 14px;border-radius:20px;z-index:3;white-space:nowrap}
+
+/* LOADING */
+.loading{text-align:center;padding:80px;color:var(--muted);font-size:16px}
+
+/* FOOTER */
+footer{border-top:1px solid rgba(201,168,76,0.15);padding:32px;text-align:center;color:var(--muted);font-size:13px}
+footer a{color:var(--gold);text-decoration:none}
+
+/* MOBILE */
+@media(max-width:640px){
+  .books-grid{grid-template-columns:repeat(2,1fr);gap:14px}
+  .books-grid.single{grid-template-columns:1fr}
+  .books-grid.single .book-cover{max-width:240px}
+  .book-card{padding:12px 12px 16px}
+  .book-title{font-size:14px}
+  .overlay-goal{font-size:13px;-webkit-line-clamp:3}
+  .cover-overlay{padding:12px}
+}
+@media(max-width:480px){
+  nav{padding:14px 16px}
+  .nav-links{gap:16px}
+  .ladder{padding:0 8px 60px}
+  .ladder-line{left:28px}
+  .step-dot{left:20px;top:22px;width:15px;height:15px}
+  .step-card{margin-left:48px;margin-right:0;border-radius:12px}
+  .step-header{padding:18px 14px}
+  .step-badge{font-size:9px;padding:3px 8px}
+  .step-meta h3{font-size:16px}
+  .step-body{padding:0 14px 18px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">Biliteracy Bridge</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="blog.html">The Reading Sala</a>
+    <a href="books.html" class="active">Books</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">The Biliteracy Ladder</div>
+  <h1>Six Steps to <span>Raise a Biliterate Child</span></h1>
+  <p>A complete progression from first bilingual encounters to full biliteracy — one step, one book at a time.</p>
+</div>
+
+<div class="ladder" id="ladder">
+  <div class="ladder-line"></div>
+  <div class="loading">Loading books…</div>
+</div>
+
+<footer>
+  <p>Biliteracy Bridge ✦ <a href="blog.html">The Reading Sala</a> · <a href="books.html">Books</a></p>
+</footer>
+
+<script>
+function loadBooks(callback) {
+  fetch('books.json?v=' + Date.now())
+    .then(function(r){ return r.json(); })
+    .then(callback)
+    .catch(function(){ callback(getFallbackSteps()); });
+}
+
+function getFallbackSteps() {
+  return [
+    { id:'step-1', num:1, title:'Visual Cognate Mapping', ageRange:'Ages 2-4', available:true,
+      goal:'Build immediate success and metalinguistic awareness through play. Help children see the shared DNA of English and Spanish through words that look and sound the same in both languages.',
+      books:[
+        { id:'book-1-1', title:'The Biliteracy Ladder: Step 1 — Visual Cognate Coloring Book',
+          description:'This full-colour coloring book introduces young children to Perfect Cognates — words that look and sound nearly identical in English and Spanish. Through vibrant illustrations and joyful play, children discover they already know hundreds of words in both languages.',
+          highlights:'Ages 2-4 | 40+ perfect cognate pairs | Full color illustrations | Gift book + first biliteracy tool',
+          price:'', amazonUrl:'', pdfUrl:'', cover:'', available:true, pages:['','','','',''] }
+      ]
+    },
+    { id:'step-2', num:2, title:'Tracing & First Words', ageRange:'Ages 3-5', available:true,
+      goal:'Develop fine motor skills and vocabulary simultaneously. Move from visual recognition to physical production.',
+      books:[
+        { id:'book-2-1', title:'The Biliteracy Ladder: Step 2 — Tracing & First Words, Book 1',
+          description:'Pairs handwriting practice with cognate-first vocabulary. Children trace letter forms and write their first bilingual words.',
+          highlights:'Ages 3-5 | Pen control exercises | High-frequency bilingual vocab | Cognate-first approach',
+          price:'', amazonUrl:'', pdfUrl:'', cover:'', available:true, pages:['','','','',''] },
+        { id:'book-2-2', title:'The Biliteracy Ladder: Step 2 — Tracing & First Words, Book 2',
+          description:'Extends tracing into first sentences and bilingual word families.',
+          highlights:'Ages 3-5 | First sentences | Bilingual word families | Builds on Book 1',
+          price:'', amazonUrl:'', pdfUrl:'', cover:'', available:true, pages:['','','','',''] }
+      ]
+    },
+    { id:'step-3', num:3, title:'ABC Bridge', ageRange:'Ages 4-6', available:false, goal:'Connect the alphabet to bilingual phonics.',
+      books:[{ id:'book-3-1', title:'ABC Bridge Workbook', description:'Bilingual phonics and early reading readiness.', highlights:'Ages 4-6 | Bilingual phonics | Alphabet mastery', price:'', amazonUrl:'', pdfUrl:'', cover:'', available:false, pages:['','','','',''] }]
+    },
+    { id:'step-4', num:4, title:'First Reader', ageRange:'Ages 5-7', available:false, goal:'Build reading fluency in both languages.',
+      books:[{ id:'book-4-1', title:'First Reader, Book 1', description:'Guided bilingual reading for emerging readers.', highlights:'Ages 5-7 | Leveled reading | Bilingual comprehension', price:'', amazonUrl:'', pdfUrl:'', cover:'', available:false, pages:['','','','',''] }]
+    },
+    { id:'step-5', num:5, title:'Story Builder', ageRange:'Ages 6-8', available:false, goal:'Develop narrative skills in both languages.',
+      books:[{ id:'book-5-1', title:'Story Builder Workbook', description:'Guided creative writing in both languages.', highlights:'Ages 6-8 | Creative writing | Bilingual prompts', price:'', amazonUrl:'', pdfUrl:'', cover:'', available:false, pages:['','','','',''] }]
+    },
+    { id:'step-6', num:6, title:'Dino Verbs', ageRange:'Ages 6-9', available:false, goal:'Master verb conjugation through dinosaur-themed activities.',
+      books:[{ id:'book-6-1', title:'Dino Verbs Workbook', description:'Dinosaur-powered verb mastery in English and Spanish.', highlights:'Ages 6-9 | Verb conjugation | Dinosaur theme', price:'', amazonUrl:'', pdfUrl:'', cover:'', available:false, pages:['','','','',''] }]
+    }
+  ];
+}
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderLadder(steps) {
+  var ladder = document.getElementById('ladder');
+  var html = '<div class="ladder-line"></div>';
+
+  steps.forEach(function(step, si) {
+    var isAvail = step.available;
+    html += '<div class="step' + (isAvail ? '' : ' coming') + '" style="animation-delay:' + (si * 0.08) + 's">';
+    html += '<div class="step-dot"></div>';
+    html += '<div class="step-card' + (isAvail ? ' open' : '') + '" id="stepcard-' + step.id + '">';
+    html += '<div class="step-header" onclick="toggleStep(' + JSON.stringify(step.id) + ')">';
+    html += '<div class="step-header-left">';
+    html += '<div class="step-badge">STEP ' + step.num + '</div>';
+    html += '<div class="step-meta"><h3>' + esc(step.title) + '</h3><div class="age">' + esc(step.ageRange) + '</div></div>';
+    html += '</div>';
+    html += '<div class="step-toggle">∧</div>';
+    html += '</div>';
+    html += '<div class="step-body">';
+    html += '<div class="goal-box"><div class="goal-label">Goal</div><p>' + esc(step.goal) + '</p></div>';
+    html += '<div class="books-label">Books in this step</div>';
+    html += '<div class="books-grid' + (step.books.length === 1 ? ' single' : '') + '">';
+
+    step.books.forEach(function(book) {
+      var soon = !book.available;
+      html += '<a class="book-card' + (soon ? ' soon' : '') + '" href="book-detail.html?id=' + esc(book.id) + '">';
+
+      // cover shelf
+      html += '<div class="book-cover">';
+      if (soon) html += '<div class="coming-badge">Coming Soon</div>';
+      if (book.cover) {
+        html += '<img src="' + esc(book.cover) + '" alt="' + esc(book.title) + ' book cover" loading="lazy">';
+      } else {
+        html += '<div class="cover-placeholder"><div class="ph-icon">📖</div><div class="ph-rule"></div><div class="ph-title">' + esc(book.title) + '</div></div>';
+      }
+      // step-context overlay (hover on desktop, first tap on mobile)
+      html += '<div class="cover-overlay">';
+      html += '<span class="overlay-step">Step ' + step.num + ' · ' + esc(step.ageRange) + '</span>';
+      html += '<div class="overlay-goal">' + esc(step.goal) + '</div>';
+      html += '<div class="overlay-cta"><span class="hover-hint">View details &amp; preview →</span><span class="tap-hint">Tap again for details &amp; preview →</span></div>';
+      html += '</div>';
+      html += '</div>';
+
+      // info beneath the cover
+      html += '<div class="book-info">';
+      html += '<div class="book-title">' + esc(book.title) + '</div>';
+      html += '<div class="book-age">' + esc(step.ageRange) + '</div>';
+      if (book.price) html += '<div class="book-price">' + esc(book.price) + '</div>';
+      html += '<div class="book-cta">View details &amp; purchase →</div>';
+      html += '</div>';
+
+      html += '</a>';
+    });
+
+    html += '</div></div></div></div>';
+  });
+
+  ladder.innerHTML = html;
+  setupTapToReveal();
+}
+
+function toggleStep(stepId) {
+  var card = document.getElementById('stepcard-' + stepId);
+  card.classList.toggle('open');
+}
+
+/* Touch devices have no hover: first tap reveals the overlay, second tap follows the link */
+function setupTapToReveal() {
+  var touchOnly = window.matchMedia('(hover: none)').matches;
+  if (!touchOnly) return;
+  var cards = document.querySelectorAll('.book-card');
+  cards.forEach(function(card) {
+    card.addEventListener('click', function(e) {
+      if (!card.classList.contains('revealed')) {
+        e.preventDefault();
+        cards.forEach(function(c) { c.classList.remove('revealed'); });
+        card.classList.add('revealed');
+      }
+      // second tap: default link navigation proceeds
+    });
+  });
+  // tapping anywhere else closes any open overlay
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.book-card')) {
+      cards.forEach(function(c) { c.classList.remove('revealed'); });
+    }
+  });
+}
+
+loadBooks(renderLadder);
+</script>
+</body>
+</html>

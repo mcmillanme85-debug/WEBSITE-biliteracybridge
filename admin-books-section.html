@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Books Admin · Biliteracy Bridge</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0d1b2e;--panel:#0f2035;--card:rgba(255,255,255,.05);
+  --gold:#E4A910;--gold2:#f0bc20;--white:#fff;
+  --muted:rgba(255,255,255,.5);--border:rgba(255,255,255,.1);
+  --danger:#e25555;--font:'DM Sans',sans-serif;
+}
+body{font-family:var(--font);background:var(--navy);color:var(--white);min-height:100vh}
+#loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem}
+.login-box{background:rgba(255,255,255,.05);border:0.5px solid var(--border);border-radius:18px;padding:2.5rem;width:100%;max-width:360px;text-align:center}
+.login-logo{font-size:1.4rem;font-weight:700;color:var(--gold);margin-bottom:.3rem}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:1.5rem}
+.login-box input{width:100%;background:rgba(255,255,255,.06);border:0.5px solid var(--border);color:var(--white);font-family:var(--font);font-size:14px;padding:11px 14px;border-radius:8px;margin-bottom:10px;outline:none}
+.login-box input:focus{border-color:rgba(228,169,16,.5)}
+.btn-login{width:100%;background:var(--gold);color:var(--navy);font-weight:600;font-size:14px;padding:12px;border-radius:8px;border:none;cursor:pointer;font-family:var(--font)}
+.btn-login:hover{background:var(--gold2)}
+.login-err{color:#e25555;font-size:13px;margin-top:8px;display:none}
+#adminShell{display:none}
+header{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:0.5px solid var(--border);background:var(--panel)}
+.brand{font-size:1rem;font-weight:600;color:var(--gold)}
+.tab-nav{display:flex;gap:4px;background:rgba(255,255,255,.05);border-radius:8px;padding:3px}
+.tab-btn{font-size:13px;font-weight:500;padding:6px 18px;border-radius:6px;border:none;cursor:pointer;font-family:var(--font);color:var(--muted);background:transparent;transition:all .2s}
+.tab-btn.active{background:rgba(255,255,255,.1);color:var(--white)}
+.logout-btn{font-size:12px;color:var(--muted);background:none;border:0.5px solid var(--border);border-radius:6px;padding:5px 12px;cursor:pointer;font-family:var(--font)}
+.main-content{max-width:960px;margin:0 auto;padding:2rem 1.5rem}
+#articlesTab{display:none}
+#booksTab{display:none}
+.export-bar{background:rgba(255,255,255,.04);border:0.5px solid var(--border);border-radius:12px;padding:1.1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:10px}
+.export-info{font-size:13px;color:var(--muted);line-height:1.6}
+.export-info strong{color:var(--white);display:block;margin-bottom:2px}
+.export-btns{display:flex;gap:8px}
+.export-btn{font-size:13px;font-weight:600;padding:9px 18px;border-radius:8px;cursor:pointer;font-family:var(--font);border:none;transition:background .15s}
+.export-btn.primary{background:var(--gold);color:var(--navy)}
+.export-btn.primary:hover{background:var(--gold2)}
+.export-btn.secondary{background:rgba(255,255,255,.08);color:var(--white)}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.section-title{font-size:1.1rem;font-weight:600}
+.section-sub{font-size:13px;color:var(--muted);margin-top:2px}
+.step-list{display:flex;flex-direction:column;gap:14px}
+.step-panel{background:var(--card);border:0.5px solid var(--border);border-radius:14px;overflow:hidden}
+.step-panel-head{display:flex;align-items:center;gap:12px;padding:1rem 1.25rem;cursor:pointer;user-select:none}
+.step-panel-head:hover{background:rgba(255,255,255,.03)}
+.sp-badge{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:rgba(228,169,16,.15);color:var(--gold);padding:3px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.sp-info{flex:1}
+.sp-name{font-size:14px;font-weight:500}
+.sp-ages{font-size:12px;color:var(--muted)}
+.sp-toggle{color:rgba(255,255,255,.3);font-size:18px;transition:transform .2s}
+.step-panel.open .sp-toggle{transform:rotate(180deg)}
+.sp-avail{font-size:11px;padding:3px 9px;border-radius:10px;font-weight:600}
+.sp-avail.yes{background:rgba(74,222,128,.12);color:rgba(74,222,128,.9)}
+.sp-avail.no{background:rgba(255,255,255,.06);color:rgba(255,255,255,.3)}
+.step-panel-body{display:none;border-top:0.5px solid rgba(255,255,255,.07);padding:1.25rem}
+.step-panel.open .step-panel-body{display:block}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.field-row.full{grid-template-columns:1fr}
+label{display:block;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:5px}
+input[type=text],textarea{width:100%;background:rgba(255,255,255,.06);border:0.5px solid var(--border);color:var(--white);font-family:var(--font);font-size:13px;padding:9px 12px;border-radius:8px;outline:none}
+input[type=text]:focus,textarea:focus{border-color:rgba(228,169,16,.5)}
+textarea{resize:vertical;min-height:70px;line-height:1.6}
+.avail-toggle{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.avail-toggle input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--gold)}
+.avail-toggle span{font-size:13px;color:rgba(255,255,255,.65)}
+.save-step-btn{background:rgba(228,169,16,.15);border:0.5px solid rgba(228,169,16,.3);color:var(--gold);font-size:12px;font-weight:600;padding:7px 16px;border-radius:7px;cursor:pointer;font-family:var(--font)}
+.books-subhead{display:flex;align-items:center;justify-content:space-between;margin:1.25rem 0 .75rem}
+.books-subhead-label{font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.add-book-btn{font-size:12px;font-weight:600;padding:5px 12px;background:rgba(255,255,255,.07);border:0.5px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;font-family:var(--font)}
+.book-editor{background:rgba(0,0,0,.15);border:0.5px solid rgba(255,255,255,.07);border-radius:10px;padding:1rem;margin-bottom:10px}
+.book-editor-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.book-editor-title{font-size:13px;font-weight:500;color:rgba(255,255,255,.7)}
+.del-book-btn{background:none;border:none;color:rgba(255,255,255,.25);cursor:pointer;font-size:18px;padding:2px 6px;border-radius:4px}
+.del-book-btn:hover{color:var(--danger)}
+.pages-section{margin-top:10px;padding-top:10px;border-top:0.5px solid rgba(255,255,255,.06)}
+.pages-label{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:8px}
+.pages-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.page-slot{position:relative;aspect-ratio:3/4;background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.12);border-radius:8px;cursor:pointer;overflow:hidden;transition:border-color .2s}
+.page-slot:hover{border-color:rgba(228,169,16,.4)}
+.page-slot-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:10px;color:rgba(255,255,255,.25);text-align:center;pointer-events:none}
+.page-slot-label span{font-size:16px}
+.page-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:7px}
+.page-slot .remove-img{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.6);border:none;border-radius:50%;width:18px;height:18px;font-size:10px;color:#fff;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:2}
+.page-slot:hover .remove-img{display:flex}
+.page-slot input[type=file]{display:none}
+.highlights-section{margin-top:10px}
+.highlight-row{display:flex;gap:6px;margin-bottom:6px;align-items:center}
+.highlight-row input{flex:1}
+.hl-del{background:none;border:none;color:rgba(255,255,255,.2);font-size:16px;cursor:pointer;padding:2px 6px;border-radius:4px}
+.hl-del:hover{color:var(--danger)}
+.add-hl-btn{font-size:12px;color:rgba(228,169,16,.6);background:none;border:0.5px dashed rgba(228,169,16,.25);border-radius:6px;padding:5px 12px;cursor:pointer;font-family:var(--font);margin-top:2px}
+.coming-soon-pill{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.3);padding:7px 12px;background:rgba(255,255,255,.04);border:0.5px dashed rgba(255,255,255,.12);border-radius:7px}
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(60px);background:rgba(74,222,128,.15);border:0.5px solid rgba(74,222,128,.4);color:rgba(74,222,128,.95);font-size:13px;font-weight:500;padding:10px 20px;border-radius:20px;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.err{background:rgba(226,85,85,.15);border-color:rgba(226,85,85,.4);color:#e25555}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">Biliteracy Bridge</div>
+    <p class="login-sub">Books Admin</p>
+    <input type="password" id="pwInput" placeholder="Enter password"/>
+    <br/>
+    <button class="btn-login" id="loginBtn">Sign in</button>
+    <div class="login-err" id="loginErr">Incorrect password — try again</div>
+  </div>
+</div>
+
+<div id="adminShell">
+  <header>
+    <div class="brand">Biliteracy Bridge &middot; Admin</div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="tab-nav">
+        <button class="tab-btn" id="tabArticles" onclick="switchTab('articles')">Articles</button>
+        <button class="tab-btn active" id="tabBooks" onclick="switchTab('books')">Books</button>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">Sign out</button>
+    </div>
+  </header>
+  <div class="main-content">
+    <div id="articlesTab">
+      <div style="text-align:center;padding:4rem 1rem;color:var(--muted);font-size:14px">
+        Your existing article editor merges here.
+      </div>
+    </div>
+    <div id="booksTab">
+      <div class="export-bar">
+        <div class="export-info">
+          <strong>How publishing works</strong>
+          Edit below &rarr; Save &rarr; Export books.json &rarr; upload to Hostinger public_html
+        </div>
+        <div class="export-btns">
+          <button class="export-btn secondary" onclick="resetDefaults()">Reset defaults</button>
+          <button class="export-btn primary" onclick="exportJSON()">&#8595; Export books.json</button>
+        </div>
+      </div>
+      <div class="section-head">
+        <div>
+          <div class="section-title">The Early Ladder &mdash; 6 Steps</div>
+          <div class="section-sub">Expand any step to edit names, descriptions, page images and Amazon links.</div>
+        </div>
+      </div>
+      <div class="step-list" id="stepList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+var PW = 'bbadmin-2026';
+
+document.getElementById('loginBtn').addEventListener('click', function() {
+  doLogin();
+});
+document.getElementById('pwInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doLogin();
+});
+
+function doLogin() {
+  var entered = document.getElementById('pwInput').value;
+  if (entered === PW) {
+    localStorage.setItem('bb_admin_auth', '1');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminShell').style.display = 'block';
+    switchTab('books');
+    renderSteps();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwInput').focus();
+  }
+}
+
+function doLogout() {
+  localStorage.removeItem('bb_admin_auth');
+  location.reload();
+}
+
+if (localStorage.getItem('bb_admin_auth') === '1') {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminShell').style.display = 'block';
+  switchTab('books');
+  setTimeout(renderSteps, 0);
+}
+
+function switchTab(t) {
+  document.getElementById('articlesTab').style.display = t === 'articles' ? 'block' : 'none';
+  document.getElementById('booksTab').style.display = t === 'books' ? 'block' : 'none';
+  document.getElementById('tabArticles').classList.toggle('active', t === 'articles');
+  document.getElementById('tabBooks').classList.toggle('active', t === 'books');
+}
+
+var DEFAULT_STEPS = [
+  {num:1, name:"Visual cognate mapping", ages:"Ages 2-4", available:true,
+   goal:"Build immediate success and metalinguistic awareness through play. Help children see the shared DNA of English and Spanish through words that look and sound the same in both languages.",
+   books:[
+     {id:"step1-book1", icon:"Coloring Book", title:"Visual Cognate Coloring Book", subtitle:"Step 1 - Book 1",
+      blurb:"Big, bold cognate illustrations for first bilingual encounters.",
+      desc:"This full-colour coloring book introduces young children to Perfect Cognates -- words that look and sound nearly identical in English and Spanish. Through vibrant illustrations and joyful play, children discover they already know hundreds of words in both languages.",
+      highlights:["Introduces 40+ perfect cognate pairs through illustration","Full colour -- designed as a gift book and first biliteracy tool","Built on the science of cross-linguistic transfer","For families, daycares, and bilingual kindergarten classrooms"],
+      pages:[null,null,null,null,null], amazonUrl:""}
+   ]},
+  {num:2, name:"Tracing and first words", ages:"Ages 3-5", available:true,
+   goal:"Develop fine motor skills and vocabulary simultaneously. Move from visual recognition to physical production.",
+   books:[
+     {id:"step2-book1", icon:"Tracing Book 1", title:"Tracing and First Words - Book 1", subtitle:"Step 2 - Book 1",
+      blurb:"Pen control exercises paired with bilingual vocabulary building.",
+      desc:"Pairs handwriting practice with cognate-first vocabulary. Children trace letter forms and write their first bilingual words.",
+      highlights:["Pen control exercises scaled from pre-writing to full letter tracing","High-frequency vocabulary in English and Spanish","Cognate-first approach","Black and white interior"],
+      pages:[null,null,null,null,null], amazonUrl:""},
+     {id:"step2-book2", icon:"Tracing Book 2", title:"Tracing and First Words - Book 2", subtitle:"Step 2 - Book 2",
+      blurb:"Extends tracing into first sentences and bilingual word families.",
+      desc:"Builds on Book 1 by introducing word families, simple sentence frames, and expanded vocabulary.",
+      highlights:["Word families and pattern recognition across both languages","Simple bilingual sentence frames","Expanded vocabulary beyond cognates","Designed to follow directly from Book 1"],
+      pages:[null,null,null,null,null], amazonUrl:""}
+   ]},
+  {num:3, name:"Phonics foundations", ages:"Ages 4-6", available:false,
+   goal:"Master phonemic awareness and identify where letter sounds are shared or differ across English and Spanish.",
+   books:[]},
+  {num:4, name:"Word families and sentences", ages:"Ages 5-7", available:false,
+   goal:"Build reading fluency through word families, sentence construction, and cross-language pattern recognition.",
+   books:[]},
+  {num:5, name:"Reading comprehension primer", ages:"Ages 6-8", available:false,
+   goal:"Develop true bilingual reading comprehension in both languages.",
+   books:[]},
+  {num:6, name:"Writing and expression", ages:"Ages 7-9", available:false,
+   goal:"Achieve full biliteracy: express ideas and arguments fluently in both English and Spanish.",
+   books:[]}
+];
+
+function loadSteps() {
+  try {
+    var r = localStorage.getItem('bb_books');
+    return r ? JSON.parse(r) : JSON.parse(JSON.stringify(DEFAULT_STEPS));
+  } catch(e) { return JSON.parse(JSON.stringify(DEFAULT_STEPS)); }
+}
+
+function saveSteps(steps) {
+  localStorage.setItem('bb_books', JSON.stringify(steps));
+  showToast('Saved');
+}
+
+function renderSteps() {
+  var steps = loadSteps();
+  var list = document.getElementById('stepList');
+  list.innerHTML = '';
+  steps.forEach(function(s, si) {
+    var panel = document.createElement('div');
+    panel.className = 'step-panel';
+    panel.id = 'sp-' + si;
+    panel.innerHTML =
+      '<div class="step-panel-head" onclick="togglePanel(' + si + ')">' +
+        '<span class="sp-badge">Step ' + s.num + '</span>' +
+        '<div class="sp-info"><div class="sp-name">' + esc(s.name) + '</div><div class="sp-ages">' + esc(s.ages) + '</div></div>' +
+        '<span class="sp-avail ' + (s.available ? 'yes' : 'no') + '">' + (s.available ? 'Available' : 'Coming soon') + '</span>' +
+        '<span class="sp-toggle">&#8964;</span>' +
+      '</div>' +
+      '<div class="step-panel-body">' + renderStepBody(s, si) + '</div>';
+    list.appendChild(panel);
+  });
+}
+
+function renderStepBody(s, si) {
+  var booksHtml = '';
+  if (s.books && s.books.length > 0) {
+    s.books.forEach(function(b, bi) { booksHtml += renderBookEditor(b, si, bi); });
+  }
+  return '<div class="field-row">' +
+    '<div><label>Step name</label><input type="text" id="s' + si + '-name" value="' + esc(s.name) + '"/></div>' +
+    '<div><label>Ages</label><input type="text" id="s' + si + '-ages" value="' + esc(s.ages) + '"/></div>' +
+    '</div>' +
+    '<div class="field-row full"><div><label>Goal description</label><textarea id="s' + si + '-goal" rows="2">' + esc(s.goal) + '</textarea></div></div>' +
+    '<div class="avail-toggle"><input type="checkbox" id="s' + si + '-avail"' + (s.available ? ' checked' : '') + '/><span>Mark as available (shows on public books page)</span></div>' +
+    '<button class="save-step-btn" onclick="saveStep(' + si + ')">Save step info</button>' +
+    '<div class="books-subhead"><span class="books-subhead-label">Books in step ' + s.num + ' (' + (s.books ? s.books.length : 0) + ')</span>' +
+    '<button class="add-book-btn" onclick="addBook(' + si + ')">+ Add book</button></div>' +
+    '<div id="books-' + si + '">' + booksHtml + '</div>';
+}
+
+function renderBookEditor(b, si, bi) {
+  var pages = b.pages || [null,null,null,null,null];
+  while (pages.length < 5) pages.push(null);
+  var pagesHtml = '';
+  for (var pi = 0; pi < 5; pi++) {
+    var p = pages[pi];
+    pagesHtml += '<div class="page-slot" id="pslot-' + si + '-' + bi + '-' + pi + '" onclick="document.getElementById(\'pfile-' + si + '-' + bi + '-' + pi + '\').click()">' +
+      '<div class="page-slot-label"><span>&#128196;</span>Page ' + (pi+1) + '</div>' +
+      (p && p.url ? '<img src="' + p.url + '" alt="page"/><button class="remove-img" onclick="removePage(event,' + si + ',' + bi + ',' + pi + ')">x</button>' : '') +
+      '<input type="file" id="pfile-' + si + '-' + bi + '-' + pi + '" accept="image/*" onchange="uploadPage(' + si + ',' + bi + ',' + pi + ',this)"/>' +
+      '</div>';
+  }
+  var hlHtml = '';
+  var highlights = b.highlights || [];
+  highlights.forEach(function(h, hi) {
+    hlHtml += '<div class="highlight-row" id="hlrow-' + si + '-' + bi + '-' + hi + '">' +
+      '<input type="text" id="hl' + si + '-' + bi + '-' + hi + '" value="' + esc(h) + '"/>' +
+      '<button class="hl-del" onclick="removeHighlight(' + si + ',' + bi + ',' + hi + ')">x</button></div>';
+  });
+  return '<div class="book-editor" id="be-' + si + '-' + bi + '">' +
+    '<div class="book-editor-head"><span class="book-editor-title">' + esc(b.title || 'New book') + '</span>' +
+    '<button class="del-book-btn" onclick="deleteBook(' + si + ',' + bi + ')">x</button></div>' +
+    '<div class="field-row"><div><label>Book ID</label><input type="text" id="b' + si + '-' + bi + '-id" value="' + esc(b.id||'') + '"/></div>' +
+    '<div><label>Amazon URL</label><input type="text" id="b' + si + '-' + bi + '-amazon" value="' + esc(b.amazonUrl||'') + '"/></div></div>' +
+    '<div class="field-row full"><div><label>Title</label><input type="text" id="b' + si + '-' + bi + '-title" value="' + esc(b.title||'') + '"/></div></div>' +
+    '<div class="field-row"><div><label>Subtitle</label><input type="text" id="b' + si + '-' + bi + '-subtitle" value="' + esc(b.subtitle||'') + '"/></div>' +
+    '<div><label>Short blurb</label><input type="text" id="b' + si + '-' + bi + '-blurb" value="' + esc(b.blurb||'') + '"/></div></div>' +
+    '<div class="field-row full"><div><label>Full description</label><textarea id="b' + si + '-' + bi + '-desc" rows="3">' + esc(b.desc||'') + '</textarea></div></div>' +
+    '<div class="highlights-section"><label style="margin-bottom:8px;display:block">What\'s inside (bullet points)</label>' +
+    '<div id="hl-' + si + '-' + bi + '">' + hlHtml + '</div>' +
+    '<button class="add-hl-btn" onclick="addHighlight(' + si + ',' + bi + ')">+ Add bullet</button></div>' +
+    '<div class="pages-section"><div class="pages-label">Sample pages (up to 5) -- click slot to upload</div>' +
+    '<div class="pages-grid">' + pagesHtml + '</div></div>' +
+    '<div style="margin-top:12px;text-align:right"><button class="save-step-btn" onclick="saveBook(' + si + ',' + bi + ')">Save book</button></div>' +
+    '</div>';
+}
+
+function togglePanel(si) { document.getElementById('sp-' + si).classList.toggle('open'); }
+
+function saveStep(si) {
+  var steps = loadSteps();
+  steps[si].name = document.getElementById('s' + si + '-name').value.trim();
+  steps[si].ages = document.getElementById('s' + si + '-ages').value.trim();
+  steps[si].goal = document.getElementById('s' + si + '-goal').value.trim();
+  steps[si].available = document.getElementById('s' + si + '-avail').checked;
+  saveSteps(steps);
+}
+
+function saveBook(si, bi) {
+  var steps = loadSteps();
+  var b = steps[si].books[bi];
+  b.icon = document.getElementById('b' + si + '-' + bi + '-id').value.trim();
+  b.id = document.getElementById('b' + si + '-' + bi + '-id').value.trim().replace(/\s+/g, '-');
+  b.title = document.getElementById('b' + si + '-' + bi + '-title').value.trim();
+  b.subtitle = document.getElementById('b' + si + '-' + bi + '-subtitle').value.trim();
+  b.amazonUrl = document.getElementById('b' + si + '-' + bi + '-amazon').value.trim();
+  b.blurb = document.getElementById('b' + si + '-' + bi + '-blurb').value.trim();
+  b.desc = document.getElementById('b' + si + '-' + bi + '-desc').value.trim();
+  var hlContainer = document.getElementById('hl-' + si + '-' + bi);
+  var hlInputs = hlContainer.querySelectorAll('input[type=text]');
+  b.highlights = Array.from(hlInputs).map(function(i) { return i.value.trim(); }).filter(Boolean);
+  saveSteps(steps);
+}
+
+function addBook(si) {
+  var steps = loadSteps();
+  steps[si].books.push({id:'step'+steps[si].num+'-book'+(steps[si].books.length+1), icon:'', title:'New book', subtitle:'', blurb:'', desc:'', highlights:[], pages:[null,null,null,null,null], amazonUrl:''});
+  saveSteps(steps);
+  renderSteps();
+  document.getElementById('sp-' + si).classList.add('open');
+}
+
+function deleteBook(si, bi) {
+  if (!confirm('Delete this book?')) return;
+  var steps = loadSteps();
+  steps[si].books.splice(bi, 1);
+  saveSteps(steps);
+  renderSteps();
+  document.getElementById('sp-' + si).classList.add('open');
+}
+
+function addHighlight(si, bi) {
+  var steps = loadSteps();
+  if (!steps[si].books[bi].highlights) steps[si].books[bi].highlights = [];
+  steps[si].books[bi].highlights.push('');
+  saveSteps(steps);
+  renderSteps();
+  document.getElementById('sp-' + si).classList.add('open');
+}
+
+function removeHighlight(si, bi, hi) {
+  var steps = loadSteps();
+  steps[si].books[bi].highlights.splice(hi, 1);
+  saveSteps(steps);
+  renderSteps();
+  document.getElementById('sp-' + si).classList.add('open');
+}
+
+function uploadPage(si, bi, pi, input) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var steps = loadSteps();
+    if (!steps[si].books[bi].pages) steps[si].books[bi].pages = [null,null,null,null,null];
+    steps[si].books[bi].pages[pi] = {url: e.target.result, name: file.name};
+    saveSteps(steps);
+    var slot = document.getElementById('pslot-' + si + '-' + bi + '-' + pi);
+    var lbl = slot.querySelector('.page-slot-label');
+    if (lbl) lbl.style.display = 'none';
+    var existImg = slot.querySelector('img');
+    if (existImg) existImg.remove();
+    var img = document.createElement('img');
+    img.src = e.target.result;
+    slot.insertBefore(img, slot.querySelector('input'));
+    var rmBtn = slot.querySelector('.remove-img');
+    if (!rmBtn) {
+      rmBtn = document.createElement('button');
+      rmBtn.className = 'remove-img';
+      rmBtn.textContent = 'x';
+      rmBtn.onclick = function(ev) { removePage(ev, si, bi, pi); };
+      slot.appendChild(rmBtn);
+    }
+    rmBtn.style.display = 'flex';
+    showToast('Page image saved');
+  };
+  reader.readAsDataURL(file);
+}
+
+function removePage(ev, si, bi, pi) {
+  ev.stopPropagation();
+  var steps = loadSteps();
+  if (steps[si].books[bi].pages) steps[si].books[bi].pages[pi] = null;
+  saveSteps(steps);
+  var slot = document.getElementById('pslot-' + si + '-' + bi + '-' + pi);
+  var img = slot.querySelector('img');
+  if (img) img.remove();
+  var rmBtn = slot.querySelector('.remove-img');
+  if (rmBtn) rmBtn.remove();
+  var lbl = slot.querySelector('.page-slot-label');
+  if (lbl) lbl.style.display = 'flex';
+  showToast('Page removed');
+}
+
+function exportJSON() {
+  var steps = loadSteps();
+  var blob = new Blob([JSON.stringify(steps, null, 2)], {type: 'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'books.json'; a.click();
+  URL.revokeObjectURL(url);
+  showToast('books.json downloaded -- upload to Hostinger public_html');
+}
+
+function resetDefaults() {
+  if (!confirm('Reset all book data to defaults?')) return;
+  localStorage.setItem('bb_books', JSON.stringify(DEFAULT_STEPS));
+  renderSteps();
+  showToast('Reset to defaults');
+}
+
+function showToast(msg, isErr) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isErr ? ' err' : '');
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2800);
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;');
+}
+</script>
+</body>
+</html>

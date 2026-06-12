@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book — Biliteracy Bridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@300;400;600&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0d1b2e;--navy2:#162640;--navy3:#1e3356;--gold:#c9a84c;--gold2:#e8c96a;--teal:#5bbfb5;--red:#e05c5c;--muted:rgba(255,255,255,0.5)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--navy);color:#fff;font-family:'Cormorant Garamond',serif;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;border-bottom:1px solid rgba(201,168,76,0.2);position:sticky;top:0;z-index:100;background:var(--navy)}
+.nav-brand{font-family:'Playfair Display',serif;font-size:17px;color:var(--gold);text-decoration:none}
+.nav-links{display:flex;gap:28px}
+.nav-links a{color:rgba(255,255,255,0.7);text-decoration:none;font-family:'Josefin Sans',sans-serif;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+
+/* BREADCRUMB */
+.breadcrumb{padding:20px 40px;font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:0.08em;color:var(--muted)}
+.breadcrumb a{color:var(--muted);text-decoration:none}
+.breadcrumb a:hover{color:var(--gold)}
+.breadcrumb span{color:var(--gold);margin:0 8px}
+
+/* DETAIL LAYOUT */
+.detail{max-width:1080px;margin:0 auto;padding:20px 40px 80px;display:grid;grid-template-columns:320px 1fr;gap:56px;align-items:start}
+@media(max-width:768px){.detail{grid-template-columns:1fr;padding:20px 24px 60px;gap:32px}}
+
+/* LEFT: COVER + BUTTONS */
+.book-left{}
+.cover-wrap{border-radius:14px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.5);margin-bottom:24px;aspect-ratio:3/4;background:var(--navy2);display:flex;align-items:center;justify-content:center}
+.cover-wrap img{width:100%;height:100%;object-fit:cover}
+.cover-placeholder{text-align:center;color:var(--muted);padding:40px 20px}
+.cover-placeholder .icon{font-size:64px;margin-bottom:12px;display:block}
+.cover-placeholder p{font-size:13px;font-family:'Josefin Sans',sans-serif;letter-spacing:0.05em}
+
+/* BUY BUTTONS */
+.buy-stack{display:flex;flex-direction:column;gap:12px}
+.btn-amazon{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--gold);color:var(--navy);font-family:'Josefin Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:16px 24px;border-radius:10px;text-decoration:none;transition:all 0.2s;border:none;cursor:pointer}
+.btn-amazon:hover{background:var(--gold2);transform:translateY(-1px);box-shadow:0 8px 24px rgba(201,168,76,0.3)}
+.btn-amazon .icon{font-size:18px}
+.btn-pdf{display:flex;align-items:center;justify-content:center;gap:10px;background:rgba(91,191,181,0.12);color:var(--teal);border:1px solid rgba(91,191,181,0.4);font-family:'Josefin Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:14px 24px;border-radius:10px;text-decoration:none;transition:all 0.2s}
+.btn-pdf:hover{background:rgba(91,191,181,0.2);transform:translateY(-1px)}
+.btn-disabled{display:flex;align-items:center;justify-content:center;gap:10px;background:rgba(255,255,255,0.04);color:var(--muted);border:1px solid rgba(255,255,255,0.1);font-family:'Josefin Sans',sans-serif;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;padding:14px 24px;border-radius:10px;cursor:not-allowed}
+.affiliate-note{font-size:11px;color:var(--muted);text-align:center;margin-top:8px;font-family:'Josefin Sans',sans-serif;line-height:1.5}
+.price-display{text-align:center;margin-bottom:16px;font-family:'Playfair Display',serif;font-size:28px;color:var(--gold)}
+.price-display .price-label{display:block;font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--muted);margin-bottom:4px}
+
+/* RIGHT: INFO */
+.book-right{}
+.step-tag{display:inline-block;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);color:var(--gold);font-family:'Josefin Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;padding:5px 12px;border-radius:20px;margin-bottom:18px}
+h1{font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,38px);line-height:1.2;color:#fff;margin-bottom:8px}
+.title-es{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:var(--muted);margin-bottom:28px}
+.description{font-size:17px;line-height:1.8;color:rgba(255,255,255,0.82);margin-bottom:32px;font-weight:300}
+
+/* HIGHLIGHTS */
+.highlights-section{margin-bottom:36px}
+.section-label{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);margin-bottom:14px}
+.highlights-grid{display:flex;flex-wrap:wrap;gap:8px}
+.highlight-pill{background:rgba(91,191,181,0.1);border:1px solid rgba(91,191,181,0.25);color:rgba(255,255,255,0.8);font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:0.05em;padding:6px 14px;border-radius:20px}
+
+/* PAGE FLIPPER */
+.flipper-section{margin-bottom:36px}
+.flipper-stage{position:relative;width:100%;aspect-ratio:3/4;max-width:340px;margin:0 auto 16px;border-radius:12px;overflow:hidden;background:var(--navy2);border:1px solid rgba(255,255,255,0.08)}
+.flip-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity 0.3s}
+.flip-img.active{opacity:1}
+.flip-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted)}
+.flip-placeholder .icon{font-size:40px}
+.flip-placeholder p{font-size:13px;font-family:'Josefin Sans',sans-serif;text-align:center;line-height:1.5}
+.flipper-nav{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px}
+.flip-btn{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:#fff;width:36px;height:36px;border-radius:50%;font-size:16px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center}
+.flip-btn:hover{background:rgba(201,168,76,0.2);border-color:var(--gold)}
+.flip-counter{font-family:'Josefin Sans',sans-serif;font-size:12px;color:var(--muted);letter-spacing:0.1em;min-width:60px;text-align:center}
+.flip-dots{display:flex;gap:6px;justify-content:center}
+.f-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);cursor:pointer;transition:background 0.2s}
+.f-dot.active{background:var(--gold)}
+
+/* ALSO IN SERIES */
+.also-section{margin-top:48px;border-top:1px solid rgba(255,255,255,0.07);padding-top:36px}
+.also-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:16px}
+.also-card{background:var(--navy2);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:16px;text-decoration:none;transition:all 0.2s;display:block}
+.also-card:hover{border-color:rgba(201,168,76,0.4);transform:translateY(-2px)}
+.also-cover{width:100%;aspect-ratio:3/4;border-radius:6px;overflow:hidden;background:var(--navy3);margin-bottom:10px;display:flex;align-items:center;justify-content:center;font-size:28px}
+.also-cover img{width:100%;height:100%;object-fit:cover}
+.also-name{font-family:'Playfair Display',serif;font-size:13px;color:var(--gold);line-height:1.3;margin-bottom:4px}
+.also-step{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:0.08em;color:var(--muted)}
+
+.loading{text-align:center;padding:80px;color:var(--muted);font-size:16px}
+footer{border-top:1px solid rgba(201,168,76,0.15);padding:32px;text-align:center;color:var(--muted);font-size:13px}
+footer a{color:var(--gold);text-decoration:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">Biliteracy Bridge</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="biliteracy-blog.html">The Reading Sala</a>
+    <a href="books.html" class="active">Books</a>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="books.html">← Back to all books</a>
+</div>
+
+<div id="main"><div class="loading">Loading…</div></div>
+
+<footer>
+  <p>Biliteracy Bridge ✦ <a href="biliteracy-blog.html">The Reading Sala</a> · <a href="books.html">Books</a></p>
+</footer>
+
+<script>
+var currentPage = 0;
+var pageImages = [];
+
+function loadBooks(callback) {
+  fetch('books.json?v=' + Date.now())
+    .then(function(r){ return r.json(); })
+    .then(callback)
+    .catch(function(){ callback(getFallbackSteps()); });
+}
+
+function getFallbackSteps() {
+  return [
+    { id:'step-1', num:1, title:'Visual Cognate Mapping', ageRange:'Ages 2-4', available:true,
+      goal:'Build immediate success and metalinguistic awareness through play.',
+      books:[
+        { id:'book-1-1', title:'The Biliteracy Ladder: Step 1 — Visual Cognate Coloring Book',
+          titleEs:'La Escalera de Biliteracidad: Paso 1 — Libro para Colorear de Cognados Visuales',
+          description:'This full-colour coloring book introduces young children to Perfect Cognates — words that look and sound nearly identical in English and Spanish, like Elefante/Elephant and Banana/Banana. Through vibrant illustrations and joyful play, children discover they already know hundreds of words in both languages.',
+          highlights:'Ages 2-4 | 40+ perfect cognate pairs | Full color illustrations | Gift book + first biliteracy tool',
+          price:'', amazonUrl:'', pdfUrl:'', cover:'', available:true, pages:['','','','',''] }
+      ]
+    },
+    { id:'step-2', num:2, title:'Tracing & First Words', ageRange:'Ages 3-5', available:true,
+      goal:'Develop fine motor skills and vocabulary simultaneously.',
+      books:[
+        { id:'book-2-1', title:'The Biliteracy Ladder: Step 2 — Tracing & First Words, Book 1',
+          titleEs:'La Escalera de Biliteracidad: Paso 2 — Trazado y Primeras Palabras, Libro 1',
+          description:'Pairs handwriting practice with cognate-first vocabulary. Children trace letter forms and write their first bilingual words.',
+          highlights:'Ages 3-5 | Pen control exercises | High-frequency bilingual vocab | Cognate-first approach',
+          price:'', amazonUrl:'', pdfUrl:'', cover:'', available:true, pages:['','','','',''] },
+        { id:'book-2-2', title:'The Biliteracy Ladder: Step 2 — Tracing & First Words, Book 2',
+          titleEs:'La Escalera de Biliteracidad: Paso 2 — Trazado y Primeras Palabras, Libro 2',
+          description:'Extends tracing into first sentences and bilingual word families.',
+          highlights:'Ages 3-5 | First sentences | Bilingual word families | Builds on Book 1',
+          price:'', amazonUrl:'', pdfUrl:'', cover:'', available:true, pages:['','','','',''] }
+      ]
+    },
+    { id:'step-3',num:3,title:'ABC Bridge',ageRange:'Ages 4-6',available:false,goal:'Connect the alphabet to bilingual phonics.',
+      books:[{id:'book-3-1',title:'ABC Bridge Workbook',titleEs:'',description:'Bilingual phonics and early reading readiness.',highlights:'Ages 4-6 | Bilingual phonics',price:'',amazonUrl:'',pdfUrl:'',cover:'',available:false,pages:['','','','','']}]},
+    { id:'step-4',num:4,title:'First Reader',ageRange:'Ages 5-7',available:false,goal:'Build reading fluency in both languages.',
+      books:[{id:'book-4-1',title:'First Reader, Book 1',titleEs:'',description:'Guided bilingual reading for emerging readers.',highlights:'Ages 5-7 | Leveled reading',price:'',amazonUrl:'',pdfUrl:'',cover:'',available:false,pages:['','','','','']}]},
+    { id:'step-5',num:5,title:'Story Builder',ageRange:'Ages 6-8',available:false,goal:'Develop narrative skills in both languages.',
+      books:[{id:'book-5-1',title:'Story Builder Workbook',titleEs:'',description:'Guided creative writing in both languages.',highlights:'Ages 6-8 | Creative writing',price:'',amazonUrl:'',pdfUrl:'',cover:'',available:false,pages:['','','','','']}]},
+    { id:'step-6',num:6,title:'Dino Verbs',ageRange:'Ages 6-9',available:false,goal:'Master verb conjugation through dinosaur-themed activities.',
+      books:[{id:'book-6-1',title:'Dino Verbs Workbook',titleEs:'',description:'Dinosaur-powered verb mastery in English and Spanish.',highlights:'Ages 6-9 | Verb conjugation | Dinosaur theme',price:'',amazonUrl:'',pdfUrl:'',cover:'',available:false,pages:['','','','','']}]}
+  ];
+}
+
+function getParam(name) {
+  var url = new URLSearchParams(window.location.search);
+  return url.get(name);
+}
+
+function findBook(steps, bookId) {
+  for (var i=0; i<steps.length; i++) {
+    for (var j=0; j<steps[i].books.length; j++) {
+      if (steps[i].books[j].id === bookId) {
+        return { book: steps[i].books[j], step: steps[i] };
+      }
+    }
+  }
+  return null;
+}
+
+function buildAmazonUrl(baseUrl, affiliateTag) {
+  if (!baseUrl) return '';
+  if (!affiliateTag) return baseUrl;
+  return baseUrl + (baseUrl.indexOf('?') >= 0 ? '&' : '?') + 'tag=' + affiliateTag;
+}
+
+function renderDetail(steps) {
+  var bookId = getParam('id');
+  var main = document.getElementById('main');
+
+  if (!bookId) {
+    main.innerHTML = '<div style="text-align:center;padding:80px"><p style="color:var(--muted)">No book selected. <a href="books.html" style="color:var(--gold)">Back to books →</a></p></div>';
+    return;
+  }
+
+  var result = findBook(steps, bookId);
+  if (!result) {
+    main.innerHTML = '<div style="text-align:center;padding:80px"><p style="color:var(--muted)">Book not found. <a href="books.html" style="color:var(--gold)">Back to books →</a></p></div>';
+    return;
+  }
+
+  var book = result.book;
+  var step = result.step;
+
+  // Update page title
+  document.title = book.title + ' — Biliteracy Bridge';
+
+  // Build highlights pills
+  var highlightPills = '';
+  if (book.highlights) {
+    book.highlights.split('|').forEach(function(h) {
+      highlightPills += '<span class="highlight-pill">' + h.trim() + '</span>';
+    });
+  }
+
+  // Build buy buttons
+  var amazonUrl = buildAmazonUrl(book.amazonUrl, '');
+  var buyButtons = '';
+  if (book.price) {
+    buyButtons += '<div class="price-display"><span class="price-label">Price</span>' + book.price + '</div>';
+  }
+  if (book.available && amazonUrl) {
+    buyButtons += '<a href="' + amazonUrl + '" target="_blank" rel="noopener" class="btn-amazon"><span class="icon">📦</span> Buy on Amazon</a>';
+    buyButtons += '<p class="affiliate-note">Purchases support Biliteracy Bridge</p>';
+  } else if (book.available && !amazonUrl) {
+    buyButtons += '<div class="btn-disabled">🔗 Amazon link coming soon</div>';
+  } else {
+    buyButtons += '<div class="btn-disabled">⏳ Coming Soon</div>';
+  }
+  if (book.pdfUrl) {
+    buyButtons += '<a href="' + book.pdfUrl + '" target="_blank" rel="noopener" class="btn-pdf"><span>📄</span> Buy Digital PDF</a>';
+  }
+  buyButtons += '<a href="books.html" style="display:block;text-align:center;margin-top:8px;font-family:Josefin Sans,sans-serif;font-size:11px;letter-spacing:0.08em;color:var(--muted);text-decoration:none">← Back to all books</a>';
+
+  // Build page flipper
+  pageImages = book.pages || ['','','','',''];
+  var flipperHtml = '<div class="flipper-section">';
+  flipperHtml += '<div class="section-label">Sample Pages</div>';
+  flipperHtml += '<div class="flipper-stage" id="flipperStage">';
+  var hasAnyPage = pageImages.some(function(p){ return p && p.length > 0; });
+  if (hasAnyPage) {
+    pageImages.forEach(function(pg, i) {
+      if (pg) flipperHtml += '<img class="flip-img' + (i===0?' active':'') + '" src="' + pg + '" data-idx="' + i + '" alt="Sample page ' + (i+1) + '">';
+    });
+  } else {
+    flipperHtml += '<div class="flip-placeholder"><span class="icon">📄</span><p>Sample pages coming soon.<br>Check back after launch!</p></div>';
+  }
+  flipperHtml += '</div>';
+  if (hasAnyPage) {
+    flipperHtml += '<div class="flipper-nav">';
+    flipperHtml += '<button class="flip-btn" onclick="flipPage(-1)">‹</button>';
+    flipperHtml += '<span class="flip-counter" id="flipCounter">1 / 5</span>';
+    flipperHtml += '<button class="flip-btn" onclick="flipPage(1)">›</button>';
+    flipperHtml += '</div>';
+    flipperHtml += '<div class="flip-dots" id="flipDots">';
+    pageImages.forEach(function(pg, i) {
+      if (pg) flipperHtml += '<div class="f-dot' + (i===0?' active':'') + '" onclick="goToPage(' + i + ')"></div>';
+    });
+    flipperHtml += '</div>';
+  }
+  flipperHtml += '</div>';
+
+  // Build also-in-series
+  var alsoHtml = '';
+  var others = [];
+  steps.forEach(function(s) {
+    s.books.forEach(function(b) {
+      if (b.id !== bookId && s.available) others.push({b:b, s:s});
+    });
+  });
+  if (others.length) {
+    alsoHtml += '<div class="also-section">';
+    alsoHtml += '<div class="section-label">Also in the series</div>';
+    alsoHtml += '<div class="also-grid">';
+    others.forEach(function(item) {
+      alsoHtml += '<a class="also-card" href="book-detail.html?id=' + item.b.id + '">';
+      alsoHtml += '<div class="also-cover">' + (item.b.cover ? '<img src="' + item.b.cover + '" alt="' + item.b.title + '">' : '📖') + '</div>';
+      alsoHtml += '<div class="also-name">' + item.b.title + '</div>';
+      alsoHtml += '<div class="also-step">Step ' + item.s.num + ' · ' + item.s.ageRange + '</div>';
+      alsoHtml += '</a>';
+    });
+    alsoHtml += '</div></div>';
+  }
+
+  main.innerHTML =
+    '<div class="detail">' +
+      '<div class="book-left">' +
+        '<div class="cover-wrap">' +
+          (book.cover
+            ? '<img src="' + book.cover + '" alt="' + book.title + '">'
+            : '<div class="cover-placeholder"><span class="icon">📖</span><p>Cover image coming soon</p></div>') +
+        '</div>' +
+        '<div class="buy-stack">' + buyButtons + '</div>' +
+      '</div>' +
+      '<div class="book-right">' +
+        '<div class="step-tag">Step ' + step.num + ' · ' + step.ageRange + '</div>' +
+        '<h1>' + book.title + '</h1>' +
+        (book.titleEs ? '<div class="title-es">' + book.titleEs + '</div>' : '') +
+        '<p class="description">' + (book.description || '') + '</p>' +
+        (highlightPills ? '<div class="highlights-section"><div class="section-label">What\'s inside</div><div class="highlights-grid">' + highlightPills + '</div></div>' : '') +
+        flipperHtml +
+        alsoHtml +
+      '</div>' +
+    '</div>';
+}
+
+function flipPage(dir) {
+  var imgs = document.querySelectorAll('.flip-img');
+  var dots = document.querySelectorAll('.f-dot');
+  var validPages = [];
+  imgs.forEach(function(img, i){ validPages.push(i); });
+  if (validPages.length === 0) return;
+  imgs[currentPage].classList.remove('active');
+  if (dots[currentPage]) dots[currentPage].classList.remove('active');
+  currentPage = (currentPage + dir + validPages.length) % validPages.length;
+  imgs[currentPage].classList.add('active');
+  if (dots[currentPage]) dots[currentPage].classList.add('active');
+  var counter = document.getElementById('flipCounter');
+  if (counter) counter.textContent = (currentPage + 1) + ' / ' + validPages.length;
+}
+
+function goToPage(idx) {
+  var diff = idx - currentPage;
+  if (diff !== 0) flipPage(diff);
+}
+
+loadBooks(renderDetail);
+</script>
+</body>
+</html>
