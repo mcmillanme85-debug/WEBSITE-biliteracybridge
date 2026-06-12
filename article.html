@@ -218,15 +218,12 @@ function parseBody(body, pullQuote) {
   // Italic *text*
   html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
   // Paragraphs — split on double newlines
-  const blocks = html.split(/
-
-+/);
+  const blocks = html.split(/\n\n+/);
   return blocks.map(b => {
     b = b.trim();
     if (!b) return '';
     if (b.startsWith('<h2>') || b.startsWith('<h3>') || b.startsWith('<blockquote')) return b;
-    return `<p>${b.replace(/
-/g, ' ')}</p>`;
+    return `<p>${b.replace(/\n/g, ' ')}</p>`;
   }).join('\n');
 }
 
