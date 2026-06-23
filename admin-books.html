@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Books Admin — Biliteracy Bridge</title>
+<style>
+:root {
+  --navy: #0d1b2e;
+  --navy2: #162640;
+  --gold: #c9a84c;
+  --gold2: #e8c96a;
+  --teal: #5bbfb5;
+  --cream: #f5f0e8;
+  --green: #4caf87;
+  --red: #e05555;
+  --muted: rgba(255,255,255,0.5);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--navy); color: #fff; font-family: system-ui, -apple-system, sans-serif; font-size: 14px; }
+
+/* TOP BAR */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 24px; background: var(--navy2);
+  border-bottom: 1px solid rgba(201,168,76,0.2); position: sticky; top: 0; z-index: 100;
+}
+.topbar h1 { font-size: 16px; color: var(--gold); letter-spacing: 0.05em; }
+.topbar-actions { display: flex; gap: 10px; align-items: center; }
+
+/* BUTTONS */
+.btn {
+  padding: 9px 18px; border-radius: 8px; border: none; cursor: pointer;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.04em; transition: opacity 0.2s;
+}
+.btn:hover { opacity: 0.85; }
+.btn-gold { background: var(--gold); color: var(--navy); }
+.btn-outline { background: transparent; color: var(--gold); border: 1px solid rgba(201,168,76,0.4); }
+.btn-green { background: var(--green); color: #fff; }
+.btn-red { background: transparent; color: var(--red); border: 1px solid rgba(224,85,85,0.4); font-size: 12px; padding: 6px 12px; }
+.btn-small { padding: 6px 12px; font-size: 12px; }
+
+/* LAYOUT */
+.main { max-width: 960px; margin: 0 auto; padding: 32px 20px 80px; }
+
+/* STATUS BAR */
+.status-bar {
+  background: rgba(91,191,181,0.1); border: 1px solid rgba(91,191,181,0.3);
+  border-radius: 10px; padding: 14px 18px; margin-bottom: 28px;
+  display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--teal);
+}
+.status-bar.error { background: rgba(224,85,85,0.1); border-color: rgba(224,85,85,0.3); color: var(--red); }
+.status-bar.success { background: rgba(76,175,135,0.1); border-color: rgba(76,175,135,0.3); color: var(--green); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+/* STEP CARDS */
+.step-card {
+  background: var(--navy2); border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px; margin-bottom: 20px; overflow: hidden;
+}
+.step-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px; cursor: pointer; user-select: none;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.step-header:hover { background: rgba(255,255,255,0.02); }
+.step-header-left { display: flex; align-items: center; gap: 14px; }
+.step-num { background: var(--gold); color: var(--navy); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.1em; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+.step-num.coming { background: rgba(255,255,255,0.1); color: var(--muted); }
+.step-title-preview { font-size: 15px; color: #fff; }
+.step-age-preview { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.step-toggle { color: var(--gold); font-size: 16px; transition: transform 0.3s; }
+.step-card.open .step-toggle { transform: rotate(180deg); }
+.step-body { display: none; padding: 20px; }
+.step-card.open .step-body { display: block; }
+
+/* FIELDS */
+.field-group { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.field-group.full { grid-template-columns: 1fr; }
+.field-group.triple { grid-template-columns: 1fr 1fr 1fr; }
+label { display: block; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--teal); margin-bottom: 6px; }
+input[type="text"], input[type="url"], textarea, select {
+  width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px; color: #fff; font-size: 13px; padding: 10px 12px;
+  font-family: inherit; transition: border-color 0.2s; outline: none;
+}
+input:focus, textarea:focus, select:focus { border-color: rgba(201,168,76,0.5); }
+textarea { resize: vertical; min-height: 70px; }
+.toggle-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0; background: rgba(255,255,255,0.1);
+  border-radius: 22px; cursor: pointer; transition: background 0.2s;
+}
+.toggle-slider::before {
+  content: ""; position: absolute; left: 3px; top: 3px;
+  width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: transform 0.2s;
+}
+.toggle input:checked + .toggle-slider { background: var(--green); }
+.toggle input:checked + .toggle-slider::before { transform: translateX(18px); }
+.toggle-label { font-size: 13px; color: rgba(255,255,255,0.8); }
+
+/* STEP-LEVEL SETTINGS */
+.step-settings {
+  background: rgba(0,0,0,0.2); border-radius: 10px; padding: 16px; margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.step-settings-title { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 14px; }
+
+/* BOOKS SECTION */
+.books-section-title {
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;
+}
+.book-editor {
+  background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px; padding: 16px; margin-bottom: 12px;
+}
+.book-editor-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+}
+.book-editor-title { font-size: 13px; color: var(--gold2); font-weight: 600; }
+
+/* PAGES */
+.pages-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 8px; margin-top: 14px; }
+.pages-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.pages-grid input { font-size: 11px; padding: 8px; }
+
+/* SEPARATOR */
+.sep { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 20px 0; }
+
+/* EXPORT SECTION */
+.export-section {
+  background: var(--navy2); border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 14px; padding: 24px; margin-bottom: 28px;
+}
+.export-section h2 { font-size: 14px; color: var(--gold); margin-bottom: 8px; }
+.export-section p { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+.export-steps { counter-reset: step; list-style: none; margin-bottom: 20px; }
+.export-steps li { counter-increment: step; padding: 6px 0; font-size: 13px;
+  color: rgba(255,255,255,0.7); display: flex; align-items: flex-start; gap: 10px; }
+.export-steps li::before {
+  content: counter(step); background: rgba(201,168,76,0.15); color: var(--gold);
+  border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center;
+  justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+}
+.import-area { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* NOTICE */
+.notice {
+  background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 8px; padding: 12px 14px; font-size: 12px; color: rgba(255,255,255,0.6);
+  line-height: 1.6; margin-top: 14px;
+}
+
+@media (max-width: 600px) {
+  .field-group { grid-template-columns: 1fr; }
+  .field-group.triple { grid-template-columns: 1fr 1fr; }
+  .pages-grid { grid-template-columns: repeat(3, 1fr); }
+  .topbar { flex-wrap: wrap; gap: 10px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>📚 Books Admin — Biliteracy Bridge</h1>
+  <div class="topbar-actions">
+    <button class="btn btn-outline btn-small" onclick="importFromFile()">📂 Load books.json</button>
+    <button class="btn btn-gold" onclick="exportJSON()">⬇ Export books.json</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="status-bar" id="statusBar">
+    <div class="status-dot"></div>
+    <span id="statusText">Ready — edit your books below, then click Export books.json</span>
+  </div>
+
+  <!-- HOW TO USE -->
+  <div class="export-section">
+    <h2>How to update your website</h2>
+    <p>Edit any book details below, then follow these steps:</p>
+    <ol class="export-steps">
+      <li>Click <strong>Export books.json</strong> (top right) — a file downloads</li>
+      <li>Log into <strong>Hostinger File Manager</strong> → open <code>public_html</code></li>
+      <li>Delete the old <code>books.json</code> and upload the new one</li>
+      <li>Your website updates instantly ✓</li>
+    </ol>
+    <div class="import-area">
+      <input type="file" id="fileInput" accept=".json" style="display:none" onchange="handleFileLoad(event)">
+      <button class="btn btn-outline btn-small" onclick="document.getElementById('fileInput').click()">
+        📂 Or load your existing books.json to edit it
+      </button>
+    </div>
+    <div class="notice">
+      💡 <strong>Tip:</strong> Bookmark this page (admin-books.html) on your website so you can always access it. 
+      The file is only accessible to people who know the URL — it doesn't need a password since it only edits a local download.
+    </div>
+  </div>
+
+  <div id="stepsContainer">
+    <!-- Steps rendered by JS -->
+  </div>
+
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+var DATA = null;
+
+var DEFAULT_DATA = {
+  steps: [
+    { id:'step-1', num:1, title:'Visual Cognate Mapping', ageRange:'Ages 2-4', available:true,
+      goal:'Build immediate success and metalinguistic awareness through play. Help children see the shared DNA of English and Spanish through words that look and sound the same in both languages.',
+      books:[{ id:'book-1-1',
+        title:'The Biliteracy Ladder: Step 1 — Visual Cognate Coloring Book',
+        description:'This full-colour coloring book introduces young children to Perfect Cognates — words that look and sound nearly identical in English and Spanish. Through vibrant illustrations and joyful play, children discover they already know hundreds of words in both languages.',
+        highlights:'Ages 2-4 | 40+ perfect cognate pairs | Full color illustrations | Gift book + first biliteracy tool',
+        price:'', amazonUrl:'', pdfUrl:'', cover:'', available:true, pages:['','','','',''] }]
+    },
+    { id:'step-2', num:2, title:'Tracing & First Words', ageRange:'Ages 3-5', available:true,
+      goal:'Develop fine motor skills and vocabulary simultaneously. Move from visual recognition to physical production.',
+      books:[
+        { id:'book-2-1', title:'The Biliteracy Ladder: Step 2 — Tracing & First Words, Book 1',
+          description:'Pairs handwriting practice with cognate-first vocabulary. Children trace letter forms and write their first bilingual words.',
+          highlights:'Ages 3-5 | Pen control exercises | High-frequency bilingual vocab | Cognate-first approach',
+          price:'', amazonUrl:'', pdfUrl:'', cover:'', available:true, pages:['','','','',''] },
+        { id:'book-2-2', title:'The Biliteracy Ladder: Step 2 — Tracing & First Words, Book 2',
+          description:'Extends tracing into first sentences and bilingual word families.',
+          highlights:'Ages 3-5 | First sentences | Bilingual word families | Builds on Book 1',
+          price:'', amazonUrl:'', pdfUrl:'', cover:'', available:true, pages:['','','','',''] }
+      ]
+    },
+    { id:'step-3', num:3, title:'ABC Bridge', ageRange:'Ages 4-6', available:false,
+      goal:'Connect the alphabet to bilingual phonics.',
+      books:[{ id:'book-3-1', title:'ABC Bridge Workbook', description:'Bilingual phonics and early reading readiness.',
+        highlights:'Ages 4-6 | Bilingual phonics | Alphabet mastery', price:'', amazonUrl:'', pdfUrl:'', cover:'', available:false, pages:['','','','',''] }]
+    },
+    { id:'step-4', num:4, title:'First Reader', ageRange:'Ages 5-7', available:false,
+      goal:'Build reading fluency in both languages.',
+      books:[{ id:'book-4-1', title:'First Reader, Book 1', description:'Guided bilingual reading for emerging readers.',
+        highlights:'Ages 5-7 | Leveled reading | Bilingual comprehension', price:'', amazonUrl:'', pdfUrl:'', cover:'', available:false, pages:['','','','',''] }]
+    },
+    { id:'step-5', num:5, title:'Story Builder', ageRange:'Ages 6-8', available:false,
+      goal:'Develop narrative skills in both languages.',
+      books:[{ id:'book-5-1', title:'Story Builder Workbook', description:'Guided creative writing in both languages.',
+        highlights:'Ages 6-8 | Creative writing | Bilingual prompts', price:'', amazonUrl:'', pdfUrl:'', cover:'', available:false, pages:['','','','',''] }]
+    },
+    { id:'step-6', num:6, title:'Dino Verbs', ageRange:'Ages 6-9', available:false,
+      goal:'Master verb conjugation through dinosaur-themed activities.',
+      books:[{ id:'book-6-1', title:'Dino Verbs Workbook', description:'Dinosaur-powered verb mastery in English and Spanish.',
+        highlights:'Ages 6-9 | Verb conjugation | Dinosaur theme', price:'', amazonUrl:'', pdfUrl:'', cover:'', available:false, pages:['','','','',''] }]
+    }
+  ]
+};
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', function() {
+  // Try to load books.json from same folder
+  fetch('books.json?v=' + Date.now())
+    .then(function(r) {
+      if (!r.ok) throw new Error('Not found');
+      return r.json();
+    })
+    .then(function(json) {
+      DATA = json;
+      setStatus('success', 'Loaded books.json from your server ✓');
+      render();
+    })
+    .catch(function() {
+      DATA = JSON.parse(JSON.stringify(DEFAULT_DATA));
+      setStatus('', 'Using default data — export to create your books.json');
+      render();
+    });
+});
+
+// ── STATUS ────────────────────────────────────────────────────────────────────
+function setStatus(type, msg) {
+  var bar = document.getElementById('statusBar');
+  var txt = document.getElementById('statusText');
+  bar.className = 'status-bar' + (type ? ' ' + type : '');
+  txt.textContent = msg;
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function render() {
+  var container = document.getElementById('stepsContainer');
+  container.innerHTML = '';
+  DATA.steps.forEach(function(step, si) {
+    container.appendChild(buildStepCard(step, si));
+  });
+}
+
+function buildStepCard(step, si) {
+  var div = document.createElement('div');
+  div.className = 'step-card' + (step.available ? ' open' : '');
+  div.id = 'stepcard-' + step.id;
+
+  var numClass = step.available ? '' : ' coming';
+
+  div.innerHTML =
+    '<div class="step-header" onclick="toggleStep(\'' + step.id + '\')">' +
+      '<div class="step-header-left">' +
+        '<div class="step-num' + numClass + '">STEP ' + step.num + '</div>' +
+        '<div><div class="step-title-preview" id="preview-title-' + step.id + '">' + esc(step.title) + '</div>' +
+        '<div class="step-age-preview">' + esc(step.ageRange) + '</div></div>' +
+      '</div>' +
+      '<div class="step-toggle">∧</div>' +
+    '</div>' +
+    '<div class="step-body">' +
+      '<div class="step-settings">' +
+        '<div class="step-settings-title">Step Settings</div>' +
+        '<div class="field-group triple">' +
+          field('Step Title', 'text', step.title, 'step-' + step.id + '-title', 'e.g. Visual Cognate Mapping') +
+          field('Age Range', 'text', step.ageRange, 'step-' + step.id + '-ageRange', 'e.g. Ages 2-4') +
+        '</div>' +
+        '<div class="field-group full">' +
+          field('Step Goal (shown on books page)', 'textarea', step.goal, 'step-' + step.id + '-goal') +
+        '</div>' +
+        '<div class="toggle-row">' +
+          '<label class="toggle"><input type="checkbox" id="step-' + step.id + '-available"' + (step.available ? ' checked' : '') + '><span class="toggle-slider"></span></label>' +
+          '<span class="toggle-label">Step is available (not "Coming Soon")</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="books-section-title">' +
+        '<span>Books in this step</span>' +
+        '<button class="btn btn-outline btn-small" onclick="addBook(\'' + step.id + '\')">+ Add book</button>' +
+      '</div>' +
+      '<div id="books-' + step.id + '">' +
+        step.books.map(function(book, bi) { return buildBookEditor(step.id, book, bi); }).join('') +
+      '</div>' +
+    '</div>';
+
+  return div;
+}
+
+function field(labelText, type, value, id, placeholder) {
+  var tag = type === 'textarea' ? 'textarea' : 'input';
+  var attrs = 'id="' + id + '" onchange="syncData()" oninput="syncData()"';
+  if (type !== 'textarea') attrs += ' type="text" value="' + esc(value) + '"';
+  if (placeholder) attrs += ' placeholder="' + esc(placeholder) + '"';
+  var inner = type === 'textarea'
+    ? '<textarea ' + attrs + '>' + esc(value) + '</textarea>'
+    : '<input ' + attrs + '>';
+  return '<div><label for="' + id + '">' + labelText + '</label>' + inner + '</div>';
+}
+
+function buildBookEditor(stepId, book, bi) {
+  var pid = stepId + '-book-' + bi;
+  return '<div class="book-editor" id="bookeditor-' + pid + '">' +
+    '<div class="book-editor-header">' +
+      '<div class="book-editor-title">Book ' + (bi + 1) + '</div>' +
+      '<button class="btn btn-red" onclick="removeBook(\'' + stepId + '\',' + bi + ')">✕ Remove</button>' +
+    '</div>' +
+    '<div class="field-group full">' +
+      field('Book Title', 'text', book.title, pid + '-title', 'e.g. The Biliteracy Ladder: Step 1 …') +
+    '</div>' +
+    '<div class="field-group full">' +
+      field('Description (shown on detail page)', 'textarea', book.description, pid + '-description') +
+    '</div>' +
+    '<div class="field-group full">' +
+      field('Highlights (pipe-separated, e.g. Ages 2-4 | 40+ pairs)', 'text', book.highlights, pid + '-highlights') +
+    '</div>' +
+    '<div class="field-group triple">' +
+      field('Price (e.g. $14.99)', 'text', book.price, pid + '-price', '$14.99') +
+      field('Amazon URL', 'text', book.amazonUrl, pid + '-amazonUrl', 'https://amazon.com/dp/…') +
+      field('Cover Image URL', 'text', book.cover, pid + '-cover', 'https://…/cover.jpg') +
+    '</div>' +
+    '<div class="toggle-row">' +
+      '<label class="toggle"><input type="checkbox" id="' + pid + '-available"' + (book.available ? ' checked' : '') + '><span class="toggle-slider"></span></label>' +
+      '<span class="toggle-label">Book is available (not "Coming Soon")</span>' +
+    '</div>' +
+    '<div class="pages-label">Sample Page Image URLs (up to 5) — leave blank if none</div>' +
+    '<div class="pages-grid">' +
+      [0,1,2,3,4].map(function(i) {
+        return '<input type="text" id="' + pid + '-page-' + i + '" value="' + esc((book.pages||[])[i]||'') + '" placeholder="Page ' + (i+1) + ' URL" onchange="syncData()" oninput="syncData()">';
+      }).join('') +
+    '</div>' +
+  '</div>';
+}
+
+function toggleStep(stepId) {
+  var card = document.getElementById('stepcard-' + stepId);
+  card.classList.toggle('open');
+}
+
+// ── SYNC DATA FROM DOM ────────────────────────────────────────────────────────
+function syncData() {
+  DATA.steps.forEach(function(step) {
+    step.title    = val('step-' + step.id + '-title') || step.title;
+    step.ageRange = val('step-' + step.id + '-ageRange') || step.ageRange;
+    step.goal     = val('step-' + step.id + '-goal') || step.goal;
+    step.available = checked('step-' + step.id + '-available');
+
+    // update preview
+    var prev = document.getElementById('preview-title-' + step.id);
+    if (prev) prev.textContent = step.title;
+
+    step.books.forEach(function(book, bi) {
+      var pid = step.id + '-book-' + bi;
+      book.title       = val(pid + '-title');
+      book.description = val(pid + '-description');
+      book.highlights  = val(pid + '-highlights');
+      book.price       = val(pid + '-price');
+      book.amazonUrl   = val(pid + '-amazonUrl');
+      book.cover       = val(pid + '-cover');
+      book.available   = checked(pid + '-available');
+      book.pages       = [0,1,2,3,4].map(function(i) { return val(pid + '-page-' + i); });
+    });
+  });
+}
+
+function val(id) {
+  var el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+function checked(id) {
+  var el = document.getElementById(id);
+  return el ? el.checked : false;
+}
+
+// ── ADD / REMOVE BOOK ─────────────────────────────────────────────────────────
+function addBook(stepId) {
+  syncData();
+  var step = DATA.steps.find(function(s) { return s.id === stepId; });
+  if (!step) return;
+  var bi = step.books.length;
+  var newBook = { id: stepId + '-book-' + bi, title:'', description:'', highlights:'',
+    price:'', amazonUrl:'', pdfUrl:'', cover:'', available:true, pages:['','','','',''] };
+  step.books.push(newBook);
+  var container = document.getElementById('books-' + stepId);
+  container.insertAdjacentHTML('beforeend', buildBookEditor(stepId, newBook, bi));
+  setStatus('', 'Book added — fill in the details then export');
+}
+
+function removeBook(stepId, bi) {
+  if (!confirm('Remove this book?')) return;
+  syncData();
+  var step = DATA.steps.find(function(s) { return s.id === stepId; });
+  if (!step) return;
+  step.books.splice(bi, 1);
+  var container = document.getElementById('books-' + stepId);
+  container.innerHTML = step.books.map(function(book, i) {
+    return buildBookEditor(stepId, book, i);
+  }).join('');
+  setStatus('', 'Book removed — export when ready');
+}
+
+// ── EXPORT ─────────────────────────────────────────────────────────────────────
+function exportJSON() {
+  syncData();
+  var json = JSON.stringify({ steps: DATA.steps }, null, 2);
+  var blob = new Blob([json], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'books.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  setStatus('success', 'books.json downloaded! Upload it to your Hostinger public_html folder ✓');
+}
+
+// ── IMPORT FROM FILE ──────────────────────────────────────────────────────────
+function importFromFile() {
+  document.getElementById('fileInput').click();
+}
+
+function handleFileLoad(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var json = JSON.parse(e.target.result);
+      if (!json.steps) throw new Error('Missing steps array');
+      DATA = json;
+      render();
+      setStatus('success', 'Loaded ' + file.name + ' ✓ — ' + DATA.steps.length + ' steps found');
+    } catch(err) {
+      setStatus('error', 'Could not read that file: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
