@@ -117,8 +117,10 @@ footer a{color:var(--gold);text-decoration:none}
 var currentPage = 0;
 var pageImages = [];
 
+var GH_RAW = 'https://raw.githubusercontent.com/mcmillanme85-debug/WEBSITE-biliteracybridge/main/';
+function ghImg(path) { if (!path) return ''; if (path.startsWith('http')) return path; return GH_RAW + path; }
 function loadBooks(callback) {
-  fetch('books.json?v=' + Date.now())
+  fetch(GH_RAW + 'books.json?v=' + Date.now())
     .then(function(r){ return r.json(); })
     .then(callback)
     .catch(function(){ callback(getFallbackSteps()); });
@@ -240,7 +242,7 @@ function renderDetail(steps) {
   var hasAnyPage = pageImages.some(function(p){ return p && p.length > 0; });
   if (hasAnyPage) {
     pageImages.forEach(function(pg, i) {
-      if (pg) flipperHtml += '<img class="flip-img' + (i===0?' active':'') + '" src="' + pg + '" data-idx="' + i + '" alt="Sample page ' + (i+1) + '">';
+      if (pg) flipperHtml += '<img class="flip-img' + (i===0?' active':'') + '" src="' + ghImg(pg) + '" data-idx="' + i + '" alt="Sample page ' + (i+1) + '">';
     });
   } else {
     flipperHtml += '<div class="flip-placeholder"><span class="icon">📄</span><p>Sample pages coming soon.<br>Check back after launch!</p></div>';
@@ -274,7 +276,7 @@ function renderDetail(steps) {
     alsoHtml += '<div class="also-grid">';
     others.forEach(function(item) {
       alsoHtml += '<a class="also-card" href="book-detail.html?id=' + item.b.id + '">';
-      alsoHtml += '<div class="also-cover">' + (item.b.cover ? '<img src="' + item.b.cover + '" alt="' + item.b.title + '">' : '📖') + '</div>';
+      alsoHtml += '<div class="also-cover">' + (item.b.cover ? '<img src="' + ghImg(item.b.cover) + '" alt="' + item.b.title + '">' : '📖') + '</div>';
       alsoHtml += '<div class="also-name">' + item.b.title + '</div>';
       alsoHtml += '<div class="also-step">Step ' + item.s.num + ' · ' + item.s.ageRange + '</div>';
       alsoHtml += '</a>';
@@ -287,7 +289,7 @@ function renderDetail(steps) {
       '<div class="book-left">' +
         '<div class="cover-wrap">' +
           (book.cover
-            ? '<img src="' + book.cover + '" alt="' + book.title + '">'
+            ? '<img src="' + ghImg(book.cover) + '" alt="' + book.title + '">'
             : '<div class="cover-placeholder"><span class="icon">📖</span><p>Cover image coming soon</p></div>') +
         '</div>' +
         '<div class="buy-stack">' + buyButtons + '</div>' +

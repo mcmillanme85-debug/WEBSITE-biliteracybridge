@@ -153,8 +153,10 @@ footer a{color:var(--gold);text-decoration:none}
 </footer>
 
 <script>
+var GH_RAW = 'https://raw.githubusercontent.com/mcmillanme85-debug/WEBSITE-biliteracybridge/main/';
+function ghImg(path) { if (!path) return ''; if (path.startsWith('http')) return path; return GH_RAW + path; }
 function loadBooks(callback) {
-  fetch('books.json?v=' + Date.now())
+  fetch(GH_RAW + 'books.json?v=' + Date.now())
     .then(function(r){ return r.json(); })
     .then(callback)
     .catch(function(){ callback(getFallbackSteps()); });
@@ -232,7 +234,7 @@ function renderLadder(steps) {
       html += '<div class="book-cover">';
       if (soon) html += '<div class="coming-badge">Coming Soon</div>';
       if (book.cover) {
-        html += '<img src="' + esc(book.cover) + '" alt="' + esc(book.title) + ' book cover" loading="lazy">';
+        html += '<img src="' + esc(ghImg(book.cover)) + '" alt="' + esc(book.title) + ' book cover" loading="lazy">';
       } else {
         html += '<div class="cover-placeholder"><div class="ph-icon">📖</div><div class="ph-rule"></div><div class="ph-title">' + esc(book.title) + '</div></div>';
       }
