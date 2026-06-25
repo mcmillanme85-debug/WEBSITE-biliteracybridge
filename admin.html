@@ -101,6 +101,24 @@ header{display:flex;align-items:center;justify-content:space-between;padding:14p
 @keyframes spin{to{transform:rotate(360deg)}}
 .saving-text{color:var(--muted);font-size:14px}
 
+.img-upload{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.img-preview{width:80px;height:100px;border-radius:8px;border:1px dashed var(--border);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;position:relative;cursor:pointer}
+.img-preview.wide{width:200px;height:120px}
+.img-preview img{width:100%;height:100%;object-fit:cover}
+.img-preview .placeholder{font-size:10px;color:var(--muted);text-align:center;padding:4px}
+.img-preview input[type=file]{display:none}
+.img-upload-info{flex:1;font-size:12px;color:var(--muted);line-height:1.5}
+.img-upload-info .img-name{color:var(--white);font-weight:500;margin-bottom:2px}
+.img-rm{font-size:11px;color:var(--red);cursor:pointer;background:none;border:none;font-family:var(--font);margin-top:4px}
+.pages-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:8px}
+.page-slot{aspect-ratio:3/4;border-radius:8px;border:1px dashed var(--border);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;position:relative;transition:border-color 0.2s}
+.page-slot:hover{border-color:rgba(201,168,76,0.4)}
+.page-slot img{width:100%;height:100%;object-fit:cover}
+.page-slot .ps-label{font-size:10px;color:var(--muted);text-align:center;pointer-events:none}
+.page-slot .ps-rm{position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.6);border:none;border-radius:50%;width:18px;height:18px;font-size:10px;color:#fff;cursor:pointer;display:none;align-items:center;justify-content:center}
+.page-slot:hover .ps-rm{display:flex}
+.page-slot input[type=file]{display:none}
+
 @media(max-width:600px){
   .field-row,.field-row.triple{grid-template-columns:1fr}
   header{padding:10px 16px}
@@ -309,6 +327,17 @@ function editArticle(i) {
     '<div class="field-row">' +
       '<div class="field"><label>Read Time (min)</label><input type="text" id="ed-readTime" value="' + esc(a.readTime) + '"></div>' +
       '<div class="field"><label>Image URL</label><input type="text" id="ed-image" value="' + esc(a.image) + '"></div></div>' +
+    '<div class="field"><label>Article Image</label>' +
+      '<div class="img-upload">' +
+        '<div class="img-preview wide" onclick="document.getElementById(\'ed-image-file\').click()">' +
+          (a.image ? '<img src="'+esc(a.image)+'">' : '<span class="placeholder">Click to<br>upload image</span>') +
+          '<input type="file" id="ed-image-file" accept="image/*" onchange="uploadArticleImage(this)">' +
+        '</div>' +
+        '<div class="img-upload-info">' +
+          (a.image ? '<div class="img-name">'+esc(a.image.split('/').pop())+'</div>' : '<div class="img-name">No image</div>') +
+          '<div>Upload a JPG or PNG for the blog card</div>' +
+          (a.image ? '<button class="img-rm" onclick="clearArticleImage()">Remove image</button>' : '') +
+        '</div></div></div>' +
     '<div class="toggle-row"><input type="checkbox" id="ed-featured"' + (a.featured?' checked':'') + '><span>Featured article</span></div>' +
     '<div class="field"><label>Excerpt (English)</label><textarea id="ed-excerpt" rows="2">' + esc(a.excerpt) + '</textarea></div>' +
     '<div class="field"><label>Excerpt (Spanish)</label><textarea id="ed-excerptEs" rows="2">' + esc(a.excerptEs) + '</textarea></div>' +
@@ -380,6 +409,26 @@ function bookEditor(si, b, bi) {
       '<div class="field"><label>Price</label><input type="text" id="bk-'+p+'-pr" value="'+esc(b.price)+'" placeholder="$14.99"></div>' +
       '<div class="field"><label>Amazon URL</label><input type="text" id="bk-'+p+'-am" value="'+esc(b.amazonUrl)+'"></div>' +
       '<div class="field"><label>Cover URL</label><input type="text" id="bk-'+p+'-cv" value="'+esc(b.cover)+'"></div></div>' +
+    '<div class="field"><label>Book Cover</label>' +
+      '<div class="img-upload">' +
+        '<div class="img-preview" onclick="document.getElementById(\'bkf-'+p+'-cv\').click()">' +
+          (b.cover ? '<img src="'+esc(b.cover)+'">' : '<span class="placeholder">Click to<br>upload cover</span>') +
+          '<input type="file" id="bkf-'+p+'-cv" accept="image/*" onchange="uploadBookCover('+si+','+bi+',this)">' +
+        '</div>' +
+        '<div class="img-upload-info">' +
+          (b.cover ? '<div class="img-name">'+esc(b.cover.split('/').pop())+'</div>' : '<div class="img-name">No cover</div>') +
+          '<div>Upload book cover image</div>' +
+          (b.cover ? '<button class="img-rm" onclick="clearBookCover('+si+','+bi+')">Remove</button>' : '') +
+        '</div></div></div>' +
+    '<div class="field"><label>Preview Pages (up to 4)</label>' +
+      '<div class="pages-grid">' +
+        [0,1,2,3].map(function(pi) {
+          var pg = (b.pages||[])[pi] || '';
+          return '<div class="page-slot" onclick="document.getElementById(\'bkf-'+p+'-pg'+pi+'\').click()">' +
+            (pg ? '<img src="'+esc(pg)+'"><button class="ps-rm" onclick="event.stopPropagation();clearBookPage('+si+','+bi+','+pi+')">x</button>' : '<span class="ps-label">Page '+(pi+1)+'</span>') +
+            '<input type="file" id="bkf-'+p+'-pg'+pi+'" accept="image/*" onchange="uploadBookPage('+si+','+bi+','+pi+',this)"></div>';
+        }).join('') +
+      '</div></div>' +
     '<div class="toggle-row"><input type="checkbox" id="bk-'+p+'-av"'+(b.available?' checked':'')+'><span>Available</span></div></div>';
 }
 
@@ -413,6 +462,72 @@ function saveBooks() {
 // ── UTILS ──
 function v(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
 function opt(val, label, cur) { return '<option value="'+val+'"'+(cur===val?' selected':'')+'>'+label+'</option>'; }
+// ── IMAGE UPLOADS ──
+function uploadImage(file, folder, callback) {
+  if (!GH.token || !GH.owner || !GH.repo) { toast('Set up GitHub in Settings first', true); return; }
+  var name = Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9._-]/g, '');
+  var path = folder + '/' + name;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var base64 = e.target.result.split(',')[1];
+    var apiPath = 'repos/' + GH.owner + '/' + GH.repo + '/contents/' + path;
+    toast('Uploading image...');
+    ghAPI(apiPath, { method: 'PUT', body: JSON.stringify({ message: 'Upload ' + name, content: base64, branch: 'main' }) })
+      .then(function(r) { if (!r.ok) throw new Error('Upload failed'); return r.json(); })
+      .then(function(data) { var url = 'images/' + name; toast('Image uploaded ✓'); callback(url); })
+      .catch(function(err) { toast('Upload failed — check Settings', true); });
+  };
+  reader.readAsDataURL(file);
+}
+
+function uploadArticleImage(input) {
+  var file = input.files[0]; if (!file) return;
+  uploadImage(file, 'images', function(url) {
+    ARTICLES[editingIdx].image = url;
+    document.getElementById('ed-image').value = url;
+    editArticle(editingIdx);
+  });
+}
+function clearArticleImage() {
+  ARTICLES[editingIdx].image = '';
+  document.getElementById('ed-image').value = '';
+  editArticle(editingIdx);
+}
+
+function uploadBookCover(si, bi, input) {
+  var file = input.files[0]; if (!file) return;
+  syncBooks();
+  uploadImage(file, 'images', function(url) {
+    BOOKS.steps[si].books[bi].cover = url;
+    renderBooks();
+    document.getElementById('sp-' + si).classList.add('open');
+  });
+}
+function clearBookCover(si, bi) {
+  syncBooks();
+  BOOKS.steps[si].books[bi].cover = '';
+  renderBooks();
+  document.getElementById('sp-' + si).classList.add('open');
+}
+
+function uploadBookPage(si, bi, pi, input) {
+  var file = input.files[0]; if (!file) return;
+  syncBooks();
+  uploadImage(file, 'images', function(url) {
+    if (!BOOKS.steps[si].books[bi].pages) BOOKS.steps[si].books[bi].pages = [];
+    while (BOOKS.steps[si].books[bi].pages.length <= pi) BOOKS.steps[si].books[bi].pages.push('');
+    BOOKS.steps[si].books[bi].pages[pi] = url;
+    renderBooks();
+    document.getElementById('sp-' + si).classList.add('open');
+  });
+}
+function clearBookPage(si, bi, pi) {
+  syncBooks();
+  if (BOOKS.steps[si].books[bi].pages) BOOKS.steps[si].books[bi].pages[pi] = '';
+  renderBooks();
+  document.getElementById('sp-' + si).classList.add('open');
+}
+
 function toast(msg, err) { var t=document.getElementById('toast'); t.textContent=msg; t.className='toast'+(err?' err':''); t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},3000); }
 function esc(s) { return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 </script>
