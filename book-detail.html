@@ -120,10 +120,22 @@ var pageImages = [];
 var GH_RAW = 'https://raw.githubusercontent.com/mcmillanme85-debug/WEBSITE-biliteracybridge/main/';
 function ghImg(path) { if (!path) return ''; if (path.startsWith('http')) return path; return GH_RAW + path; }
 function loadBooks(callback) {
-  fetch(GH_RAW + 'books.json?v=' + Date.now())
-    .then(function(r){ return r.json(); })
-    .then(callback)
-    .catch(function(){ callback(getFallbackSteps()); });
+  var urls = [
+    GH_RAW + 'books.json?v=' + Date.now(),
+    'https://api.github.com/repos/mcmillanme85-debug/WEBSITE-biliteracybridge/contents/books.json',
+    'books.json?v=' + Date.now()
+  ];
+  tryFetch(urls, 0, callback);
+}
+function tryFetch(urls, i, callback) {
+  if (i >= urls.length) { callback(getFallbackSteps()); return; }
+  fetch(urls[i])
+    .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(d) {
+      if (d.content) { d = JSON.parse(atob(d.content)); }
+      callback(d.steps ? d.steps : d);
+    })
+    .catch(function() { tryFetch(urls, i + 1, callback); });
 }
 
 function getFallbackSteps() {
