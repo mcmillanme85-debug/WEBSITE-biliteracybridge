@@ -3,7 +3,7 @@
     {
       "id": "step-1",
       "num": 1,
-      "title": "Visual Cognate Mapping",
+      "title": "The words we share - Palabras que compartimos",
       "ageRange": "Ages 2-4",
       "available": true,
       "goal": "Build immediate success and metalinguistic awareness through play. Help children see the shared DNA of English and Spanish through words that look and sound the same in both languages.",
@@ -13,12 +13,18 @@
           "title": "The Biliteracy Ladder: Step 1 — Visual Cognate Coloring Book",
           "description": "This full-colour coloring book introduces young children to Perfect Cognates — words that look and sound nearly identical in English and Spanish. Through vibrant illustrations and joyful play, children discover they already know hundreds of words in both languages.",
           "highlights": "Ages 2-4 | 40+ perfect cognate pairs | Full color illustrations | Gift book + first biliteracy tool",
-          "price": "",
+          "price": "13.99",
           "amazonUrl": "",
           "pdfUrl": "",
-          "cover": "",
+          "cover": "images/1782363839233-Screenshot2026-06-24at11.03.20PM.png",
           "available": true,
-          "pages": ["", "", "", "", ""]
+          "pages": [
+            "images/1782363697715-Screenshot2026-06-04at9.23.01PM.png",
+            "images/1782363705946-Screenshot2026-06-04at9.23.21PM.png",
+            "images/1782363716880-Screenshot2026-06-04at9.22.53PM.png",
+            "images/1782363728914-Screenshot2026-06-04at9.22.44PM.png",
+            ""
+          ]
         }
       ]
     },
@@ -32,15 +38,21 @@
       "books": [
         {
           "id": "book-2-1",
-          "title": "The Biliteracy Ladder: Step 2 — Tracing & First Words, Book 1",
+          "title": "Jungle Bilingüe - Early ABC Sounds - Primeros Sonidos del Abecedario",
           "description": "Pairs handwriting practice with cognate-first vocabulary. Children trace letter forms and write their first bilingual words.",
           "highlights": "Ages 4-6 | Pen control exercises | High-frequency bilingual vocab | Cognate-first approach",
-          "price": "",
+          "price": "14.99",
           "amazonUrl": "",
           "pdfUrl": "",
-          "cover": "",
+          "cover": "images/1782363979179-Screenshot2026-06-04at12.14.02PM.png",
           "available": true,
-          "pages": ["", "", "", "", ""]
+          "pages": [
+            "images/1782364291038-Screenshot2026-06-24at11.09.23PM.png",
+            "images/1782364299973-Screenshot2026-06-24at11.09.35PM.png",
+            "images/1782364322970-Screenshot2026-06-24at11.10.07PM.png",
+            "images/1782364371972-Screenshot2026-06-24at11.10.36PM.png",
+            ""
+          ]
         },
         {
           "id": "book-2-2",
@@ -52,7 +64,25 @@
           "pdfUrl": "",
           "cover": "",
           "available": true,
-          "pages": ["", "", "", "", ""]
+          "pages": [
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
+        },
+        {
+          "id": "book-2-3",
+          "title": "",
+          "description": "",
+          "highlights": "",
+          "price": "",
+          "amazonUrl": "",
+          "pdfUrl": "",
+          "cover": "",
+          "available": true,
+          "pages": []
         }
       ]
     },
@@ -74,7 +104,13 @@
           "pdfUrl": "",
           "cover": "",
           "available": false,
-          "pages": ["", "", "", "", ""]
+          "pages": [
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
         }
       ]
     },
@@ -96,7 +132,13 @@
           "pdfUrl": "",
           "cover": "",
           "available": false,
-          "pages": ["", "", "", "", ""]
+          "pages": [
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
         }
       ]
     },
@@ -118,7 +160,13 @@
           "pdfUrl": "",
           "cover": "",
           "available": false,
-          "pages": ["", "", "", "", ""]
+          "pages": [
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
         }
       ]
     },
@@ -140,7 +188,13 @@
           "pdfUrl": "",
           "cover": "",
           "available": false,
-          "pages": ["", "", "", "", ""]
+          "pages": [
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
         }
       ]
     }
