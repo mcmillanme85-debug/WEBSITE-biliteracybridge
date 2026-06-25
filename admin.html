@@ -407,8 +407,14 @@ function bookEditor(si, b, bi) {
     '<div class="field"><label>Highlights</label><input type="text" id="bk-'+p+'-h" value="'+esc(b.highlights)+'" placeholder="Ages 2-4 | 40+ pairs"></div>' +
     '<div class="field-row triple">' +
       '<div class="field"><label>Price</label><input type="text" id="bk-'+p+'-pr" value="'+esc(b.price)+'" placeholder="$14.99"></div>' +
-      '<div class="field"><label>Amazon URL</label><input type="text" id="bk-'+p+'-am" value="'+esc(b.amazonUrl)+'"></div>' +
-      '<div class="field"><label>Cover URL</label><input type="text" id="bk-'+p+'-cv" value="'+esc(b.cover)+'"></div></div>' +
+      '<div class="field"><label>Cover URL</label><input type="text" id="bk-'+p+'-cv" value="'+esc(b.cover)+'"></div>' +
+      '<div class="field"><label>PDF URL</label><input type="text" id="bk-'+p+'-pdf" value="'+esc(b.pdfUrl||'')+'"></div></div>' +
+    '<div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:8px;padding:14px;margin-bottom:14px">' +
+      '<label style="color:var(--gold);margin-bottom:8px;display:block">Amazon &amp; Affiliate Links</label>' +
+      '<div class="field-row">' +
+        '<div class="field"><label>Amazon Product URL</label><input type="text" id="bk-'+p+'-am" value="'+esc(b.amazonUrl)+'" placeholder="https://amazon.com/dp/..."></div>' +
+        '<div class="field"><label>Amazon Affiliate Link</label><input type="text" id="bk-'+p+'-aff" value="'+esc(b.affiliateUrl||'')+'" placeholder="https://amzn.to/..."></div>' +
+      '</div></div>' +
     '<div class="field"><label>Book Cover</label>' +
       '<div class="img-upload">' +
         '<div class="img-preview" onclick="document.getElementById(\'bkf-'+p+'-cv\').click()">' +
@@ -446,6 +452,10 @@ function syncBooks() {
       b.highlights=document.getElementById('bk-'+p+'-h').value.trim();
       b.price=document.getElementById('bk-'+p+'-pr').value.trim();
       b.amazonUrl=document.getElementById('bk-'+p+'-am').value.trim();
+      b.affiliateUrl=(document.getElementById('bk-'+p+'-aff')||{}).value||'';
+      b.affiliateUrl=b.affiliateUrl.trim();
+      b.pdfUrl=(document.getElementById('bk-'+p+'-pdf')||{}).value||'';
+      b.pdfUrl=b.pdfUrl.trim();
       b.cover=document.getElementById('bk-'+p+'-cv').value.trim();
       b.available=document.getElementById('bk-'+p+'-av').checked;
     });
