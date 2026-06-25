@@ -56,18 +56,18 @@
         },
         {
           "id": "book-2-2",
-          "title": "The Biliteracy Ladder: Step 2 — Tracing & First Words, Book 2",
-          "description": "Extends tracing into first sentences and bilingual word families.",
+          "title": "Bilingual Everyday Things - Cosas Cotidiana Bilingües",
+          "description": "",
           "highlights": "Ages 4-6 | First sentences | Bilingual word families | Builds on Book 1",
           "price": "",
           "amazonUrl": "",
           "pdfUrl": "",
-          "cover": "",
+          "cover": "images/1782364574459-Screenshot2026-06-24at11.15.31PM.png",
           "available": true,
           "pages": [
-            "",
-            "",
-            "",
+            "images/1782364668156-Screenshot2026-06-04at9.19.58PM.png",
+            "images/1782364682141-Screenshot2026-06-04at9.17.43PM.png",
+            "images/1782364749990-Screenshot2026-06-04at9.17.56PM.png",
             "",
             ""
           ]
