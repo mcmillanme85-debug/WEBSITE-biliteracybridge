@@ -24,7 +24,8 @@
             "images/1782363716880-Screenshot2026-06-04at9.22.53PM.png",
             "images/1782363728914-Screenshot2026-06-04at9.22.44PM.png",
             ""
-          ]
+          ],
+          "affiliateUrl": ""
         }
       ]
     },
@@ -33,7 +34,7 @@
       "num": 2,
       "title": "Tracing & First Words",
       "ageRange": "Ages 4-6",
-      "available": true,
+      "available": false,
       "goal": "Develop fine motor skills and vocabulary simultaneously. Move from visual recognition to physical production.",
       "books": [
         {
@@ -45,14 +46,15 @@
           "amazonUrl": "",
           "pdfUrl": "",
           "cover": "images/1782363979179-Screenshot2026-06-04at12.14.02PM.png",
-          "available": true,
+          "available": false,
           "pages": [
             "images/1782364291038-Screenshot2026-06-24at11.09.23PM.png",
             "images/1782364299973-Screenshot2026-06-24at11.09.35PM.png",
             "images/1782364322970-Screenshot2026-06-24at11.10.07PM.png",
             "images/1782364371972-Screenshot2026-06-24at11.10.36PM.png",
             ""
-          ]
+          ],
+          "affiliateUrl": ""
         },
         {
           "id": "book-2-2",
@@ -70,29 +72,18 @@
             "images/1782364749990-Screenshot2026-06-04at9.17.56PM.png",
             "",
             ""
-          ]
-        },
-        {
-          "id": "book-2-3",
-          "title": "",
-          "description": "",
-          "highlights": "",
-          "price": "",
-          "amazonUrl": "",
-          "pdfUrl": "",
-          "cover": "",
-          "available": true,
-          "pages": []
+          ],
+          "affiliateUrl": ""
         }
       ]
     },
     {
       "id": "step-3",
       "num": 3,
-      "title": "ABC Bridge — Phonics Foundations",
+      "title": "Language Explorer - ABC Bridge — Phonics Foundations",
       "ageRange": "Ages 4-6",
       "available": false,
-      "goal": "Connect the alphabet to bilingual phonics. Children learn to decode sounds in both English and Spanish, anchored by cognates that make both languages feel familiar.",
+      "goal": "Connect the alphabet to bilingual phonics. Children learn to decode sounds in both English and Spanish. This book moves away from cognates and focuses on showing phonetic comparison in both languages.",
       "books": [
         {
           "id": "book-3-1",
@@ -110,7 +101,8 @@
             "",
             "",
             ""
-          ]
+          ],
+          "affiliateUrl": ""
         }
       ]
     },
@@ -138,7 +130,8 @@
             "",
             "",
             ""
-          ]
+          ],
+          "affiliateUrl": ""
         }
       ]
     },
@@ -166,7 +159,8 @@
             "",
             "",
             ""
-          ]
+          ],
+          "affiliateUrl": ""
         }
       ]
     },
@@ -194,7 +188,8 @@
             "",
             "",
             ""
-          ]
+          ],
+          "affiliateUrl": ""
         }
       ]
     }
