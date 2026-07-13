@@ -35,7 +35,7 @@
       "title": "Tracing & First Words",
       "ageRange": "Ages 4-6",
       "available": false,
-      "goal": "Develop fine motor skills and vocabulary simultaneously. Move from visual recognition to physical production.",
+      "goal": "Develop fine motor skills and vocabulary simultaneously. Move from visual recognition to physical production. Learn first sounds and compare and contrast between Spanish and English words and sounds.",
       "books": [
         {
           "id": "book-2-1",
@@ -46,7 +46,7 @@
           "amazonUrl": "",
           "pdfUrl": "",
           "cover": "images/1782363979179-Screenshot2026-06-04at12.14.02PM.png",
-          "available": false,
+          "available": true,
           "pages": [
             "images/1782364291038-Screenshot2026-06-24at11.09.23PM.png",
             "images/1782364299973-Screenshot2026-06-24at11.09.35PM.png",
